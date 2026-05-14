@@ -3,8 +3,19 @@
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 
-// ── Sprite ────────────────────────────────────────────────────────────────────
-const SPRITE_MAP = [
+// ── Sprite ─────────────────────────────────────────────────────────────────────
+const SPX = 3;
+const SPRITE_W = 12 * SPX;
+const SPRITE_H = 14 * SPX;
+
+const SC: Record<string, string | null> = {
+  ".": null, G: "#2d6a4f", g: "#40916c",
+  H: "#e9c46a", S: "#fddcb4", e: "#1a1a2e",
+  M: "#c9736a", T: "#52b788", B: "#8b5e3c",
+};
+
+// Head rows (12 chars × 7 rows each)
+const HEAD_DOWN = [
   "..gggggg....",
   ".gggggggg...",
   ".GHHHHHHHG..",
@@ -12,46 +23,106 @@ const SPRITE_MAP = [
   ".GSeSSSeSG..",
   ".GSSSSSSSG..",
   ".GSSSMMSSG..",
+];
+
+// Back of head — only hair visible
+const HEAD_UP = [
+  "..gggggg....",
+  ".gggggggg...",
+  ".gggggggggg.",
+  ".gggggggggg.",
+  "..gggggggg..",
+  "..gggggggg..",
+  "...ggSSSgg..",
+];
+
+// Left-facing profile — flipped horizontally for right
+const HEAD_LEFT = [
+  "....gggggg..",
+  "...gggggggg.",
+  "..GHHHHGgg..",
+  "..GSSSHGg...",
+  "..GeSSSGg...",
+  "..GSSSSGg...",
+  "..GSMMSGg...",
+];
+
+const BODY = [
   "TTTTTTTTTTTT",
   ".TTTTTTTTTT.",
   ".TTTTTTTTTT.",
+];
+
+// Legs neutral (idle / foot-strike)
+const LEGS_0 = [
   "..BBTTTBB...",
   "..BBTTTBB...",
   "..BB...BB...",
   "..BB...BB...",
 ];
-const SC: Record<string, string | null> = {
-  ".": null, G: "#2d6a4f", g: "#40916c",
-  H: "#e9c46a", S: "#fddcb4", e: "#1a1a2e",
-  M: "#c9736a", T: "#52b788", B: "#8b5e3c",
-};
-const SPX = 3;
-const SPRITE_W = 12 * SPX;
-const SPRITE_H = 14 * SPX;
 
-function buildSprite() {
+// Legs mid-stride (feet spread apart)
+const LEGS_1 = [
+  "..BBTTTBB...",
+  "..BBTTTBB...",
+  ".BB.....BB..",
+  ".BB.....BB..",
+];
+
+type Dir = "down" | "up" | "left" | "right";
+
+function renderRows(ctx: CanvasRenderingContext2D, rows: string[], startRow: number) {
+  rows.forEach((row, y) =>
+    [...row].forEach((ch, x) => {
+      const col = SC[ch];
+      if (!col) return;
+      ctx.fillStyle = col;
+      ctx.fillRect(x * SPX, (startRow + y) * SPX, SPX, SPX);
+    })
+  );
+}
+
+function buildFrame(dir: Dir, legsFrame: 0 | 1): HTMLCanvasElement {
   const c = document.createElement("canvas");
   c.width = SPRITE_W; c.height = SPRITE_H;
   const ctx = c.getContext("2d")!;
-  SPRITE_MAP.forEach((row, y) =>
-    [...row].forEach((ch, x) => {
-      const col = SC[ch]; if (!col) return;
-      ctx.fillStyle = col;
-      ctx.fillRect(x * SPX, y * SPX, SPX, SPX);
-    })
-  );
-  return c;
+
+  const head = dir === "up" ? HEAD_UP : dir === "down" ? HEAD_DOWN : HEAD_LEFT;
+  renderRows(ctx, head, 0);
+  renderRows(ctx, BODY, 7);
+  renderRows(ctx, legsFrame === 0 ? LEGS_0 : LEGS_1, 10);
+
+  if (dir !== "right") return c;
+
+  // Mirror left sprite for right-facing
+  const f = document.createElement("canvas");
+  f.width = SPRITE_W; f.height = SPRITE_H;
+  const fctx = f.getContext("2d")!;
+  fctx.translate(SPRITE_W, 0);
+  fctx.scale(-1, 1);
+  fctx.drawImage(c, 0, 0);
+  return f;
 }
 
-// ── Tiles ─────────────────────────────────────────────────────────────────────
+type SpriteSet = { [K in Dir]: [HTMLCanvasElement, HTMLCanvasElement] };
+
+function buildSprites(): SpriteSet {
+  return {
+    down:  [buildFrame("down",  0), buildFrame("down",  1)],
+    up:    [buildFrame("up",    0), buildFrame("up",    1)],
+    left:  [buildFrame("left",  0), buildFrame("left",  1)],
+    right: [buildFrame("right", 0), buildFrame("right", 1)],
+  };
+}
+
+// ── Tiles ──────────────────────────────────────────────────────────────────────
 const TILE = { GRASS: 0, DIRT: 1, ROCK: 2, WATER: 3 } as const;
 const TS = 32;
 const TILE_COLOR: Record<number, string> = {
   0: "#c8a45a", 1: "#a07840", 2: "#8c6a28", 3: "#1a7f9e",
 };
 
-// ── Maps ──────────────────────────────────────────────────────────────────────
-// 0=sand  1=cracked path  2=rock/cactus  3=oasis
+// ── Maps ───────────────────────────────────────────────────────────────────────
 const MAP_0: number[][] = [
   [2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2],
   [2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2],
@@ -151,7 +222,7 @@ const MAP_2: number[][] = [
   [2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2],
 ];
 
-// ── Doors ─────────────────────────────────────────────────────────────────────
+// ── Doors ──────────────────────────────────────────────────────────────────────
 type Door = { tileX: number; tileY: number; toLevel: number; spawnX: number; spawnY: number; label: string };
 
 const LEVELS = [
@@ -195,30 +266,23 @@ function canMoveTo(map: number[][], nx: number, ny: number) {
 }
 
 function drawDoor(ctx: CanvasRenderingContext2D, sx: number, sy: number, label: string) {
-  // Stone pillars
   ctx.fillStyle = "#5c3a14";
   ctx.fillRect(sx - 3, sy + 4, 5, 30);
   ctx.fillRect(sx + 30, sy + 4, 5, 30);
-  // Arch top
   ctx.fillRect(sx - 3, sy, 38, 6);
-  // Pillar highlight
   ctx.fillStyle = "#9e6e30";
   ctx.fillRect(sx - 2, sy + 5, 2, 20);
   ctx.fillRect(sx + 32, sy + 5, 2, 20);
-  // Portal interior
   ctx.fillStyle = "#080318";
   ctx.fillRect(sx + 2, sy + 6, 28, 26);
-  // Portal glow lines
   ctx.fillStyle = "rgba(255, 190, 40, 0.7)";
   ctx.fillRect(sx + 2, sy + 6, 28, 3);
   ctx.fillStyle = "rgba(255, 190, 40, 0.3)";
   ctx.fillRect(sx + 2, sy + 9, 28, 3);
-  // Stars inside portal
   ctx.fillStyle = "rgba(255,255,200,0.6)";
   ctx.fillRect(sx + 8,  sy + 14, 2, 2);
   ctx.fillRect(sx + 18, sy + 18, 2, 2);
   ctx.fillRect(sx + 24, sy + 12, 2, 2);
-  // Label
   ctx.fillStyle = "#ffd700";
   ctx.font = "bold 8px monospace";
   ctx.textAlign = "center";
@@ -226,7 +290,7 @@ function drawDoor(ctx: CanvasRenderingContext2D, sx: number, sy: number, label: 
   ctx.textAlign = "left";
 }
 
-// ── Component ─────────────────────────────────────────────────────────────────
+// ── Component ──────────────────────────────────────────────────────────────────
 export default function Play() {
   const canvasRef    = useRef<HTMLCanvasElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -245,12 +309,15 @@ export default function Play() {
     resize();
     window.addEventListener("resize", resize);
 
-    const sprite   = buildSprite();
-    const keys     = new Set<string>();
-    const player   = { x: 5 * TS, y: 5 * TS };
-    const levelRef = { current: 0 };
-    const flashRef = { current: 0 };     // 0–255
-    const cooldown = { current: 0 };     // frames before door re-triggers
+    const sprites     = buildSprites();
+    const keys        = new Set<string>();
+    const player      = { x: 5 * TS, y: 5 * TS };
+    const levelRef    = { current: 0 };
+    const flashRef    = { current: 0 };
+    const cooldown    = { current: 0 };
+    const dirRef      = { current: "down" as Dir };
+    const walkTickRef = { current: 0 };
+    const walkFrameRef = { current: 0 as 0 | 1 };
 
     function onKeyDown(e: KeyboardEvent) {
       const k = e.key.toLowerCase();
@@ -273,6 +340,21 @@ export default function Play() {
       if (keys.has("s")) dy += SPEED;
       if (keys.has("a")) dx -= SPEED;
       if (keys.has("d")) dx += SPEED;
+
+      // Direction & walk animation (from intended input, before collision)
+      if (dx !== 0 || dy !== 0) {
+        dirRef.current = Math.abs(dx) >= Math.abs(dy)
+          ? (dx < 0 ? "left" : "right")
+          : (dy < 0 ? "up" : "down");
+        if (++walkTickRef.current >= 8) {
+          walkTickRef.current = 0;
+          walkFrameRef.current = (walkFrameRef.current === 0 ? 1 : 0) as 0 | 1;
+        }
+      } else {
+        walkFrameRef.current = 0;
+        walkTickRef.current  = 0;
+      }
+
       if (dx !== 0 && dy !== 0) { dx = Math.round(dx * 0.707); dy = Math.round(dy * 0.707); }
       if (canMoveTo(map, player.x + dx, player.y))      player.x += dx;
       if (canMoveTo(map, player.x,      player.y + dy)) player.y += dy;
@@ -287,11 +369,11 @@ export default function Play() {
           const dcx = door.tileX * TS + TS / 2;
           const dcy = door.tileY * TS + TS / 2;
           if (Math.hypot(pcx - dcx, pcy - dcy) < 22) {
-            levelRef.current   = door.toLevel;
-            player.x           = door.spawnX;
-            player.y           = door.spawnY;
-            flashRef.current   = 255;
-            cooldown.current   = 90;
+            levelRef.current  = door.toLevel;
+            player.x          = door.spawnX;
+            player.y          = door.spawnY;
+            flashRef.current  = 255;
+            cooldown.current  = 90;
             setLevelName(LEVELS[door.toLevel].name);
             break;
           }
@@ -311,7 +393,6 @@ export default function Play() {
       const r0 = Math.max(0, Math.floor(camY / TS));
       const r1 = Math.min(MAP_H, Math.ceil((camY + H) / TS) + 1);
 
-      // Tiles
       for (let r = r0; r < r1; r++) {
         for (let c = c0; c < c1; c++) {
           const tile = map[r][c];
@@ -363,7 +444,8 @@ export default function Play() {
         drawDoor(ctx, sx, sy, door.label);
       }
 
-      // Player
+      // Player — pick sprite by direction & walk frame
+      const sprite = sprites[dirRef.current][walkFrameRef.current];
       ctx.drawImage(sprite, Math.round(player.x - camX), Math.round(player.y - camY));
 
       // Transition flash

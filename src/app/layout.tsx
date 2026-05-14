@@ -44,7 +44,7 @@ export default function RootLayout({
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col relative overflow-x-hidden"
+      <body className="h-full flex flex-col relative overflow-x-hidden"
         style={{ background: "radial-gradient(ellipse at 50% 0%, #1a2a4a 0%, #0a0f1e 50%, #000008 100%)" }}
       >
         {/* Fixed star layer */}
@@ -67,7 +67,7 @@ export default function RootLayout({
         </div>
 
         {/* Content */}
-        <div className="relative flex flex-col min-h-full" style={{ zIndex: 1 }}>
+        <div className="relative flex flex-col flex-1 overflow-y-auto" style={{ zIndex: 1 }}>
           <Navbar />
           {children}
         </div>
