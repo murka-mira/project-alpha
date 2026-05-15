@@ -111,7 +111,7 @@ function buildSprites(): SpriteSet {
 
 // ── Tiles ──────────────────────────────────────────────────────────────────────
 const TS = 32;
-const MAP_W = 40, MAP_H = 30, SPEED = 2;
+const MAP_W = 40, MAP_H = 30, SPEED = 4;
 
 // ── Maze generation (DFS / recursive backtracker) ──────────────────────────────
 function seededRng(seed: number) {
@@ -243,7 +243,7 @@ function canMoveTo(map: number[][], nx: number, ny: number) {
   ].every(([cx, cy]) => !isSolid(map, Math.floor(cx / TS), Math.floor(cy / TS)));
 }
 
-function drawDoor(ctx: CanvasRenderingContext2D, sx: number, sy: number, isExit: boolean) {
+function drawDoor(ctx: CanvasRenderingContext2D, sx: number, sy: number, isExit: boolean, locked: boolean) {
   ctx.fillStyle = "#5c3a14";
   ctx.fillRect(sx - 3, sy + 4, 5, 30);
   ctx.fillRect(sx + 30, sy + 4, 5, 30);
@@ -253,18 +253,32 @@ function drawDoor(ctx: CanvasRenderingContext2D, sx: number, sy: number, isExit:
   ctx.fillRect(sx + 32, sy + 5, 2, 20);
   ctx.fillStyle = "#080318";
   ctx.fillRect(sx + 2, sy + 6, 28, 26);
-  ctx.fillStyle = isExit ? "rgba(100, 255, 100, 0.7)" : "rgba(255, 190, 40, 0.7)";
+  const glowColor  = locked ? "rgba(220, 50, 50, 0.8)"  : isExit ? "rgba(100, 255, 100, 0.7)" : "rgba(255, 190, 40, 0.7)";
+  const glowColor2 = locked ? "rgba(220, 50, 50, 0.35)" : isExit ? "rgba(100, 255, 100, 0.3)" : "rgba(255, 190, 40, 0.3)";
+  ctx.fillStyle = glowColor;
   ctx.fillRect(sx + 2, sy + 6, 28, 3);
-  ctx.fillStyle = isExit ? "rgba(100, 255, 100, 0.3)" : "rgba(255, 190, 40, 0.3)";
+  ctx.fillStyle = glowColor2;
   ctx.fillRect(sx + 2, sy + 9, 28, 3);
   ctx.fillStyle = "rgba(255,255,200,0.6)";
   ctx.fillRect(sx + 8,  sy + 14, 2, 2);
   ctx.fillRect(sx + 18, sy + 18, 2, 2);
   ctx.fillRect(sx + 24, sy + 12, 2, 2);
-  ctx.fillStyle = isExit ? "#88ff88" : "#ffd700";
+  // Lock icon when blocked
+  if (locked) {
+    ctx.fillStyle = "#cc2222";
+    ctx.fillRect(sx + 11, sy + 16, 10, 8);
+    ctx.fillStyle = "#080318";
+    ctx.beginPath();
+    ctx.arc(sx + 16, sy + 16, 4, Math.PI, Math.PI * 2);
+    ctx.fill();
+    ctx.fillStyle = "#ffaaaa";
+    ctx.fillRect(sx + 14, sy + 19, 4, 3);
+  }
+  const labelColor = locked ? "#ff8888" : isExit ? "#88ff88" : "#ffd700";
+  ctx.fillStyle = labelColor;
   ctx.font = "bold 8px monospace";
   ctx.textAlign = "center";
-  ctx.fillText(isExit ? "EXIT ▶" : "NEXT ▶", sx + 16, sy + 38);
+  ctx.fillText(locked ? "LOCKED" : isExit ? "EXIT ▶" : "NEXT ▶", sx + 16, sy + 38);
   ctx.textAlign = "left";
 }
 
@@ -346,10 +360,17 @@ function drawEquippedSword(
 const MONSTER_RADIUS = 14;
 const MONSTER_SPEED  = 0.65;
 const BLADE_REACH    = 30;
+const MSX            = 3; // monster art scale → 12 art px × 3 = 36 screen px
+const PLAYER_MAX_HP  = 100;
+const LOS_RANGE      = 220;  // px — sight range
+const CHASE_SPEED    = 1.3;  // px/frame when chasing
+const ATTACK_RANGE   = 36;   // px — melee contact
+const ATTACK_CD      = 300;  // frames between monster attacks (5 s @ 60 fps)
+const PLAYER_IFRAMES = 40;   // invincibility frames after being hit
 
 interface MonsterState {
   id: number;
-  x: number; y: number;   // world-space center
+  x: number; y: number;
   hp: number; maxHp: number;
   level: number;
   wobbleTick: number;
@@ -357,6 +378,8 @@ interface MonsterState {
   moveTimer: number;
   hitCooldown: number;
   hitFlash: number;
+  aggroed: boolean;
+  attackCooldown: number;
 }
 
 function normalizeAngle(a: number): number {
@@ -370,6 +393,17 @@ function canMonsterMoveTo(map: number[][], cx: number, cy: number): boolean {
   return (
     [cx - r, cx + r].flatMap(px => [cy - r, cy + r].map(py => [px, py]))
   ).every(([px, py]) => !isSolid(map, Math.floor(px / TS), Math.floor(py / TS)));
+}
+
+function hasLineOfSight(map: number[][], x1: number, y1: number, x2: number, y2: number): boolean {
+  const dx = x2 - x1, dy = y2 - y1;
+  const steps = Math.ceil(Math.hypot(dx, dy) / 8);
+  if (steps === 0) return true;
+  for (let i = 1; i < steps; i++) {
+    const t = i / steps;
+    if (isSolid(map, Math.floor((x1 + dx * t) / TS), Math.floor((y1 + dy * t) / TS))) return false;
+  }
+  return true;
 }
 
 function spawnMonsters(level: Level, levelIdx: number): MonsterState[] {
@@ -389,7 +423,7 @@ function spawnMonsters(level: Level, levelIdx: number): MonsterState[] {
     [candidates[i], candidates[j]] = [candidates[j], candidates[i]];
   }
 
-  const hp = (levelIdx + 1) * 20 + 10; // 30 / 50 / 70 / 90 / 110
+  const hp = (levelIdx + 1) * 20 + 10;
   return candidates.slice(0, count).map(([c, r], i) => ({
     id: i,
     x: c * TS + TS / 2, y: r * TS + TS / 2,
@@ -399,71 +433,99 @@ function spawnMonsters(level: Level, levelIdx: number): MonsterState[] {
     vx: 0, vy: 0,
     moveTimer: Math.floor(Math.random() * 80),
     hitCooldown: 0, hitFlash: 0,
+    aggroed: false, attackCooldown: 0,
   }));
 }
+
+// Pixel art blob — 12×12 art at MSX scale, 2-frame hop animation
+const BLOB_C: Record<string, string | null> = {
+  ".": null,
+  "D": "#1b4d30",  // dark outline
+  "G": "#2d8a4e",  // mid green
+  "g": "#4ecb71",  // light green
+  "h": "#a0f0b0",  // specular highlight
+  "e": "#0d1017",  // eye
+  "m": "#0d1f10",  // mouth
+};
+const BLOB_FLASH_C: Record<string, string | null> = {
+  ".": null,
+  "D": "#6a1a1a",
+  "G": "#cc3333",
+  "g": "#ff7777",
+  "h": "#ffbbbb",
+  "e": "#200808",
+  "m": "#3a0000",
+};
+const BLOB_FRAMES: [string[], string[]] = [
+  // Frame 0 – standing
+  [
+    "....DDDD....",
+    "..DDGGGGDD..",
+    ".DDGggggGDD.",
+    ".DDGghhgGDD.",
+    ".DGggggggGD.",
+    ".DGgeggegGD.",
+    ".DGggggggGD.",
+    ".DGgmggmgGD.",
+    ".DDGggggGDD.",
+    "..DDGGGGDD..",
+    "....DDDD....",
+    "............",
+  ],
+  // Frame 1 – squished (landing)
+  [
+    "............",
+    "....DDDD....",
+    "..DDGGGGDD..",
+    ".DDGghhgGDD.",
+    "DDGgggggggDD",
+    "DDGgegggegDD",
+    "DDGgggggggDD",
+    "DDGgmgggmgDD",
+    ".DDGggggGDD.",
+    "..DDGGGGDD..",
+    "....DDDD....",
+    "............",
+  ],
+];
 
 function drawMonster(
   ctx: CanvasRenderingContext2D,
   m: MonsterState,
   camX: number, camY: number,
 ) {
-  const sx  = Math.round(m.x - camX);
-  const sy  = Math.round(m.y - camY);
-  const r   = MONSTER_RADIUS;
-  const t   = m.wobbleTick;
+  const sx = Math.round(m.x - camX);
+  const sy = Math.round(m.y - camY);
+  const flash  = m.hitFlash > 0;
+  const frame  = BLOB_FRAMES[Math.floor(m.wobbleTick / 15) % 2];
+  const colors = flash ? BLOB_FLASH_C : BLOB_C;
 
-  // Squish/stretch + vertical bob
-  const squishX = 1 + Math.sin(t * 0.13) * 0.12 + Math.sin(t * 0.07) * 0.05;
-  const squishY = 1 / squishX;
-  const bob     = Math.sin(t * 0.09) * 2;
-  const bodyY   = sy + bob;
-  const flash   = m.hitFlash > 0;
+  const renderW = 12 * MSX; // 36
+  const renderH = 12 * MSX; // 36
+  const ox = sx - renderW / 2;
+  const oy = sy - renderH / 2;
 
-  // Shadow
+  // Drop shadow
   ctx.save();
-  ctx.translate(sx, sy + r + 1);
-  ctx.scale(squishX, 0.25);
-  ctx.beginPath();
-  ctx.arc(0, 0, r * 0.85, 0, Math.PI * 2);
-  ctx.fillStyle = "rgba(0,0,0,0.22)";
-  ctx.fill();
+  ctx.globalAlpha = 0.25;
+  ctx.fillStyle = "#000";
+  ctx.fillRect(ox + 4, sy + renderH / 2 - 3, renderW - 8, 5);
   ctx.restore();
 
-  // Body blob
-  ctx.save();
-  ctx.translate(sx, bodyY);
-  ctx.scale(squishX, squishY);
-
-  ctx.beginPath();
-  ctx.arc(0, 0, r, 0, Math.PI * 2);
-  ctx.fillStyle = flash ? "#ff5555" : "#29844a";
-  ctx.fill();
-
-  ctx.beginPath();
-  ctx.arc(-r * 0.18, -r * 0.22, r * 0.58, 0, Math.PI * 2);
-  ctx.fillStyle = flash ? "#ff9999" : "#4ecb74";
-  ctx.fill();
-
-  ctx.beginPath();
-  ctx.arc(-r * 0.30, -r * 0.35, r * 0.22, 0, Math.PI * 2);
-  ctx.fillStyle = "rgba(180,255,180,0.55)";
-  ctx.fill();
-
-  ctx.restore();
-
-  // Eyes (not squished)
-  const eyeY = bodyY - r * 0.08;
-  ctx.fillStyle = "#1a1a2e";
-  ctx.beginPath(); ctx.arc(sx - r * 0.33, eyeY, r * 0.22, 0, Math.PI * 2); ctx.fill();
-  ctx.beginPath(); ctx.arc(sx + r * 0.33, eyeY, r * 0.22, 0, Math.PI * 2); ctx.fill();
-  ctx.fillStyle = "rgba(255,255,255,0.9)";
-  ctx.beginPath(); ctx.arc(sx - r * 0.26, eyeY - r * 0.08, r * 0.09, 0, Math.PI * 2); ctx.fill();
-  ctx.beginPath(); ctx.arc(sx + r * 0.40, eyeY - r * 0.08, r * 0.09, 0, Math.PI * 2); ctx.fill();
+  // Pixel art body
+  frame.forEach((row, y) =>
+    [...row].forEach((ch, x) => {
+      const color = colors[ch];
+      if (!color) return;
+      ctx.fillStyle = color;
+      ctx.fillRect(ox + x * MSX, oy + y * MSX, MSX, MSX);
+    })
+  );
 
   // HP bar
-  const barW = 32, barH = 4;
+  const barW = renderW, barH = 4;
   const barX = sx - barW / 2;
-  const barY = bodyY - r - 8;
+  const barY = oy - 10;
   ctx.fillStyle = "rgba(0,0,0,0.6)";
   ctx.fillRect(barX, barY, barW, barH);
   const pct = m.hp / m.maxHp;
@@ -679,6 +741,8 @@ export default function Play() {
 
   const [levelName, setLevelName]         = useState(LEVELS[0].name);
   const [won, setWon]                     = useState(false);
+  const [dead, setDead]                   = useState(false);
+  const [playerHp, setPlayerHp]           = useState(PLAYER_MAX_HP);
   const [inventoryOpen, setInventoryOpen] = useState(false);
   const [swordEquipped, setSwordEquipped] = useState(false);
   const equippedRef                       = useRef(false);
@@ -719,14 +783,19 @@ export default function Play() {
     const sprites      = buildSprites();
     spritesRef.current = sprites;
 
-    const keys         = new Set<string>();
-    const levelRef     = { current: 0 };
-    const flashRef     = { current: 0 };
-    const cooldown     = { current: 0 };
-    const dirRef       = { current: "down" as Dir };
-    const walkTickRef  = { current: 0 };
-    const walkFrameRef = { current: 0 as 0 | 1 };
-    const wonRef       = { current: false };
+    const keys              = new Set<string>();
+    const levelRef          = { current: 0 };
+    const flashRef          = { current: 0 };
+    const cooldown          = { current: 0 };
+    const dirRef            = { current: "down" as Dir };
+    const walkTickRef       = { current: 0 };
+    const walkFrameRef      = { current: 0 as 0 | 1 };
+    const wonRef            = { current: false };
+    const deadRef           = { current: false };
+    const doorBlockedRef    = { current: 0 };
+    const pHpRef            = { current: PLAYER_MAX_HP };
+    const pHitCooldown      = { current: 0 };
+    const pHitFlash         = { current: 0 };
 
     const startLevel = LEVELS[0];
     const player = { x: startLevel.spawnX, y: startLevel.spawnY };
@@ -769,7 +838,7 @@ export default function Play() {
     let animId: number;
 
     function loop() {
-      if (wonRef.current) return;
+      if (wonRef.current || deadRef.current) return;
 
       const level = LEVELS[levelRef.current];
       const map   = level.map;
@@ -810,20 +879,25 @@ export default function Play() {
           const dcx = level.doorTileX * TS + TS / 2;
           const dcy = level.doorTileY * TS + TS / 2;
           if (Math.hypot(pcx - dcx, pcy - dcy) < 22) {
-            const nextLevel = levelRef.current + 1;
-            if (nextLevel >= LEVELS.length) {
-              wonRef.current = true;
-              flashRef.current = 255;
-              setWon(true);
+            const allDead = monsters.every(m => m.hp <= 0);
+            if (!allDead) {
+              doorBlockedRef.current = 120;
             } else {
-              levelRef.current = nextLevel;
-              const nl = LEVELS[nextLevel];
-              player.x = nl.spawnX;
-              player.y = nl.spawnY;
-              monsters = spawnMonsters(nl, nextLevel);
-              flashRef.current = 255;
-              cooldown.current = 90;
-              setLevelName(nl.name);
+              const nextLevel = levelRef.current + 1;
+              if (nextLevel >= LEVELS.length) {
+                wonRef.current = true;
+                flashRef.current = 255;
+                setWon(true);
+              } else {
+                levelRef.current = nextLevel;
+                const nl = LEVELS[nextLevel];
+                player.x = nl.spawnX;
+                player.y = nl.spawnY;
+                monsters = spawnMonsters(nl, nextLevel);
+                flashRef.current = 255;
+                cooldown.current = 90;
+                setLevelName(nl.name);
+              }
             }
           }
         }
@@ -831,22 +905,61 @@ export default function Play() {
 
       // ── Monster AI ────────────────────────────────────────────────────────
       if (!inventoryOpenRef.current) {
+        if (pHitCooldown.current > 0) pHitCooldown.current--;
+        if (pHitFlash.current    > 0) pHitFlash.current--;
+
+        const pcx = player.x + SPRITE_W / 2;
+        const pcy = player.y + SPRITE_H / 2;
+
         for (const m of monsters) {
           if (m.hp <= 0) continue;
           m.wobbleTick++;
-          if (m.hitCooldown > 0) m.hitCooldown--;
-          if (m.hitFlash    > 0) m.hitFlash--;
+          if (m.hitCooldown    > 0) m.hitCooldown--;
+          if (m.hitFlash       > 0) m.hitFlash--;
+          if (m.attackCooldown > 0) m.attackCooldown--;
 
-          m.moveTimer--;
-          if (m.moveTimer <= 0) {
-            const angle = Math.random() * Math.PI * 2;
-            m.vx = Math.cos(angle) * MONSTER_SPEED;
-            m.vy = Math.sin(angle) * MONSTER_SPEED;
-            m.moveTimer = 80 + Math.floor(Math.random() * 80);
+          const dist = Math.hypot(m.x - pcx, m.y - pcy);
+
+          // Spot player if close enough and no wall in between
+          if (!m.aggroed && dist < LOS_RANGE && hasLineOfSight(map, m.x, m.y, pcx, pcy)) {
+            m.aggroed = true;
           }
+
+          if (m.aggroed) {
+            if (dist <= ATTACK_RANGE) {
+              // Melee attack
+              m.vx = 0; m.vy = 0;
+              if (m.attackCooldown === 0 && pHitCooldown.current === 0) {
+                pHpRef.current = Math.max(0, pHpRef.current - m.level * 8);
+                setPlayerHp(pHpRef.current);
+                pHitCooldown.current = PLAYER_IFRAMES;
+                pHitFlash.current    = 14;
+                if (pHpRef.current <= 0) {
+                  deadRef.current = true;
+                  setDead(true);
+                }
+                m.attackCooldown = ATTACK_CD;
+              }
+            } else {
+              // Chase
+              const angle = Math.atan2(pcy - m.y, pcx - m.x);
+              m.vx = Math.cos(angle) * CHASE_SPEED;
+              m.vy = Math.sin(angle) * CHASE_SPEED;
+            }
+          } else {
+            // Random wander
+            m.moveTimer--;
+            if (m.moveTimer <= 0) {
+              const angle = Math.random() * Math.PI * 2;
+              m.vx = Math.cos(angle) * MONSTER_SPEED;
+              m.vy = Math.sin(angle) * MONSTER_SPEED;
+              m.moveTimer = 80 + Math.floor(Math.random() * 80);
+            }
+          }
+
           const nx = m.x + m.vx, ny = m.y + m.vy;
-          if (canMonsterMoveTo(map, nx, m.y)) m.x = nx; else { m.vx = 0; m.moveTimer = 0; }
-          if (canMonsterMoveTo(map, m.x, ny)) m.y = ny; else { m.vy = 0; m.moveTimer = 0; }
+          if (canMonsterMoveTo(map, nx, m.y)) m.x = nx; else { m.vx = 0; if (!m.aggroed) m.moveTimer = 0; }
+          if (canMonsterMoveTo(map, m.x, ny)) m.y = ny; else { m.vy = 0; if (!m.aggroed) m.moveTimer = 0; }
         }
 
         // ── Sword hit detection ──────────────────────────────────────────────
@@ -916,7 +1029,8 @@ export default function Play() {
 
       const dsx = Math.round(level.doorTileX * TS - camX);
       const dsy = Math.round(level.doorTileY * TS - camY);
-      drawDoor(ctx, dsx, dsy, levelRef.current === LEVELS.length - 1);
+      const allDead = monsters.every(m => m.hp <= 0);
+      drawDoor(ctx, dsx, dsy, levelRef.current === LEVELS.length - 1, !allDead);
 
       for (const m of monsters) {
         if (m.hp > 0) drawMonster(ctx, m, camX, camY);
@@ -929,10 +1043,33 @@ export default function Play() {
       if (swingRef.current > 0) swingRef.current--;
       if (equippedRef.current) drawEquippedSword(ctx, spx, spy, dirRef.current, swingRef.current);
 
+      // Red vignette when hit
+      if (pHitFlash.current > 0) {
+        ctx.save();
+        ctx.globalAlpha = (pHitFlash.current / 14) * 0.45;
+        ctx.fillStyle = "#cc0000";
+        ctx.fillRect(0, 0, W, H);
+        ctx.restore();
+      }
+
       if (flashRef.current > 0) {
         ctx.fillStyle = `rgba(255, 230, 160, ${flashRef.current / 255})`;
         ctx.fillRect(0, 0, W, H);
         flashRef.current = Math.max(0, flashRef.current - 14);
+      }
+
+      if (doorBlockedRef.current > 0) {
+        const alpha = Math.min(1, doorBlockedRef.current / 30);
+        ctx.save();
+        ctx.globalAlpha = alpha;
+        ctx.font = "bold 15px monospace";
+        ctx.textAlign = "center";
+        ctx.fillStyle = "#000";
+        ctx.fillText("DEFEAT ALL MONSTERS FIRST!", W / 2 + 1, H / 2 - 29);
+        ctx.fillStyle = "#ff5555";
+        ctx.fillText("DEFEAT ALL MONSTERS FIRST!", W / 2, H / 2 - 30);
+        ctx.restore();
+        doorBlockedRef.current--;
       }
 
       animId = requestAnimationFrame(loop);
@@ -956,7 +1093,19 @@ export default function Play() {
     <div className="flex-1 flex flex-col overflow-hidden">
       {/* HUD */}
       <div className="flex items-center justify-between px-4 py-2 bg-black/50 backdrop-blur-sm border-b border-white/10 font-mono text-xs text-slate-400 shrink-0">
-        <span className="text-yellow-300 font-bold tracking-widest">VOID EXPLORER</span>
+        <div className="flex items-center gap-3">
+          <span className="text-yellow-300 font-bold tracking-widest">VOID EXPLORER</span>
+          <div className="flex items-center gap-0.5" title={`${playerHp} / ${PLAYER_MAX_HP} HP`}>
+            {Array.from({ length: 10 }, (_, i) => (
+              <span key={i} style={{
+                fontSize: 13,
+                lineHeight: 1,
+                color: i < Math.ceil(playerHp / 10) ? (playerHp <= 20 ? "#ff2222" : "#ff5555") : "#3a1a1a",
+                textShadow: i < Math.ceil(playerHp / 10) ? "0 0 4px #ff0000" : "none",
+              }}>♥</span>
+            ))}
+          </div>
+        </div>
         <span className="text-yellow-200 tracking-widest">{levelName} / {LEVELS.length}</span>
         <div className="flex items-center gap-4">
           <span className="text-slate-500 tracking-widest">[E] INV &nbsp; [1] {swordEquipped ? <span className="text-green-400">SWORD ✓</span> : "EQUIP"}</span>
@@ -1035,6 +1184,25 @@ export default function Play() {
                 {hotbar.map((item, i) => <Slot key={i} item={item} />)}
               </div>
             </div>
+          </div>
+        )}
+
+        {/* Game over overlay */}
+        {dead && (
+          <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/80">
+            <p className="font-mono text-red-500 tracking-[0.4em] text-sm mb-4">✦ YOU WERE DEFEATED ✦</p>
+            <h2
+              className="text-5xl font-bold font-mono text-red-400 mb-8 tracking-widest"
+              style={{ textShadow: "0 0 30px rgba(220,0,0,0.6)" }}
+            >
+              GAME OVER
+            </h2>
+            <Link
+              href="/games/explorer"
+              className="font-mono tracking-[0.3em] text-white border border-white/30 px-8 py-3 hover:bg-white/10 transition-colors"
+            >
+              TRY AGAIN
+            </Link>
           </div>
         )}
 

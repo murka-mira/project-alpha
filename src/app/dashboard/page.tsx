@@ -2,13 +2,6 @@ import Link from "next/link";
 
 const sections = [
   {
-    title: "Games",
-    description: "Play games built right here in the app.",
-    href: "/games",
-    emoji: "🎮",
-    external: false,
-  },
-  {
     title: "Aries Student Portal",
     description: "Log in to the IUSD student portal.",
     href: "https://my.iusd.org/LoginParent.aspx",
@@ -45,7 +38,6 @@ export default function Dashboard() {
             rel={section.external ? "noopener noreferrer" : undefined}
             className="group flex flex-col gap-3 p-6 rounded-2xl border border-white/10 bg-white/5 backdrop-blur-sm hover:border-sky-500/40 hover:bg-white/10 transition-all"
           >
-            <span className="text-3xl">{section.emoji}</span>
             <h2 className="text-lg font-semibold text-white group-hover:text-sky-400 transition-colors">
               {section.title}
             </h2>
