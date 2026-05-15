@@ -28,3 +28,14 @@ body {
   80%  { opacity: 0.6; }
   100% { transform: translateY(-100vh) scale(0.4); opacity: 0; }
 }
+
+.inv-slot:hover {
+  background: #9e9e9e !important;
+}
+.inv-slot:hover::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(255, 255, 255, 0.15);
+  pointer-events: none;
+}
