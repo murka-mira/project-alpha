@@ -364,8 +364,11 @@ const MSX            = 3; // monster art scale → 12 art px × 3 = 36 screen px
 const PLAYER_MAX_HP  = 100;
 const LOS_RANGE      = 220;  // px — sight range
 const CHASE_SPEED    = 1.3;  // px/frame when chasing
-const ATTACK_RANGE   = 36;   // px — melee contact
-const ATTACK_CD      = 300;  // frames between monster attacks (5 s @ 60 fps)
+const ATTACK_CD      = 300;  // frames between claw attacks (5 s @ 60 fps)
+const CLAW_FRAMES    = 60;   // frames for one full claw sweep
+const CLAW_REACH     = 34;   // length of claw arm in px
+const CLAW_SWEEP     = 2.0;  // total radians swept (starts ~behind, ends past player)
+const CLAW_HIT_R     = 20;   // hit radius around claw tip
 const PLAYER_IFRAMES = 40;   // invincibility frames after being hit
 
 interface MonsterState {
@@ -380,6 +383,9 @@ interface MonsterState {
   hitFlash: number;
   aggroed: boolean;
   attackCooldown: number;
+  clawSwing: number;    // frames remaining in current claw attack (0 = not attacking)
+  clawAngle: number;    // world angle toward player when attack was started
+  clawHit: boolean;     // whether this swing already dealt damage
 }
 
 function normalizeAngle(a: number): number {
@@ -434,6 +440,7 @@ function spawnMonsters(level: Level, levelIdx: number): MonsterState[] {
     moveTimer: Math.floor(Math.random() * 80),
     hitCooldown: 0, hitFlash: 0,
     aggroed: false, attackCooldown: 0,
+    clawSwing: 0, clawAngle: 0, clawHit: false,
   }));
 }
 
@@ -512,6 +519,41 @@ function drawMonster(
   ctx.fillRect(ox + 4, sy + renderH / 2 - 3, renderW - 8, 5);
   ctx.restore();
 
+  // ── Claw arc + arm (drawn BEFORE body so root is hidden by the blob) ───────
+  if (m.clawSwing > 0) {
+    const t = 1 - m.clawSwing / CLAW_FRAMES;
+    const startA   = m.clawAngle - (CLAW_SWEEP - 0.2);
+    const currentA = startA + t * CLAW_SWEEP;
+
+    // Glow arc trail
+    ctx.save();
+    ctx.lineCap = "round";
+    ctx.beginPath();
+    ctx.arc(sx, sy, CLAW_REACH, startA, currentA, false);
+    ctx.strokeStyle = "rgba(60,200,60,0.18)";
+    ctx.lineWidth = 14;
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.arc(sx, sy, CLAW_REACH, startA, currentA, false);
+    ctx.strokeStyle = "rgba(30,130,30,0.55)";
+    ctx.lineWidth = 3;
+    ctx.stroke();
+    ctx.restore();
+
+    // Arm
+    const tipX = sx + Math.cos(currentA) * CLAW_REACH;
+    const tipY = sy + Math.sin(currentA) * CLAW_REACH;
+    ctx.save();
+    ctx.strokeStyle = "#1b4d30";
+    ctx.lineWidth = 5;
+    ctx.lineCap = "round";
+    ctx.beginPath();
+    ctx.moveTo(sx, sy);
+    ctx.lineTo(tipX, tipY);
+    ctx.stroke();
+    ctx.restore();
+  }
+
   // Pixel art body
   frame.forEach((row, y) =>
     [...row].forEach((ch, x) => {
@@ -521,6 +563,26 @@ function drawMonster(
       ctx.fillRect(ox + x * MSX, oy + y * MSX, MSX, MSX);
     })
   );
+
+  // ── Claw fingers (drawn AFTER body so they appear in front) ────────────────
+  if (m.clawSwing > 0) {
+    const t = 1 - m.clawSwing / CLAW_FRAMES;
+    const startA   = m.clawAngle - (CLAW_SWEEP - 0.2);
+    const currentA = startA + t * CLAW_SWEEP;
+    const tipX = sx + Math.cos(currentA) * CLAW_REACH;
+    const tipY = sy + Math.sin(currentA) * CLAW_REACH;
+
+    ctx.save();
+    ctx.translate(tipX, tipY);
+    ctx.rotate(currentA);
+    ctx.strokeStyle = "#0d2214";
+    ctx.lineWidth = 2.5;
+    ctx.lineCap = "round";
+    ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(12, -6); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(14,  0); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(12,  6); ctx.stroke();
+    ctx.restore();
+  }
 
   // HP bar
   const barW = renderW, barH = 4;
@@ -925,27 +987,39 @@ export default function Play() {
             m.aggroed = true;
           }
 
-          if (m.aggroed) {
-            if (dist <= ATTACK_RANGE) {
-              // Melee attack
-              m.vx = 0; m.vy = 0;
-              if (m.attackCooldown === 0 && pHitCooldown.current === 0) {
-                pHpRef.current = Math.max(0, pHpRef.current - m.level * 8);
-                setPlayerHp(pHpRef.current);
-                pHitCooldown.current = PLAYER_IFRAMES;
-                pHitFlash.current    = 14;
-                if (pHpRef.current <= 0) {
-                  deadRef.current = true;
-                  setDead(true);
-                }
-                m.attackCooldown = ATTACK_CD;
-              }
-            } else {
-              // Chase
-              const angle = Math.atan2(pcy - m.y, pcx - m.x);
-              m.vx = Math.cos(angle) * CHASE_SPEED;
-              m.vy = Math.sin(angle) * CHASE_SPEED;
+          // Trigger claw swing when close enough and cooldown ready
+          if (m.aggroed && m.clawSwing === 0 && m.attackCooldown === 0 && dist <= CLAW_REACH + 20) {
+            m.clawSwing  = CLAW_FRAMES;
+            m.clawAngle  = Math.atan2(pcy - m.y, pcx - m.x);
+            m.clawHit    = false;
+            m.attackCooldown = ATTACK_CD;
+          }
+
+          if (m.clawSwing > 0) {
+            // Mid-swing: freeze the monster so the player can dodge
+            m.vx = 0; m.vy = 0;
+
+            // Check if claw tip touches player this frame
+            const t        = 1 - m.clawSwing / CLAW_FRAMES;
+            const startA   = m.clawAngle - (CLAW_SWEEP - 0.2);
+            const currentA = startA + t * CLAW_SWEEP;
+            const tipX = m.x + Math.cos(currentA) * CLAW_REACH;
+            const tipY = m.y + Math.sin(currentA) * CLAW_REACH;
+
+            if (!m.clawHit && pHitCooldown.current === 0 && Math.hypot(tipX - pcx, tipY - pcy) < CLAW_HIT_R) {
+              m.clawHit = true;
+              pHpRef.current = Math.max(0, pHpRef.current - m.level * 8);
+              setPlayerHp(pHpRef.current);
+              pHitCooldown.current = PLAYER_IFRAMES;
+              pHitFlash.current    = 14;
+              if (pHpRef.current <= 0) { deadRef.current = true; setDead(true); }
             }
+            m.clawSwing--;
+          } else if (m.aggroed) {
+            // Chase
+            const angle = Math.atan2(pcy - m.y, pcx - m.x);
+            m.vx = Math.cos(angle) * CHASE_SPEED;
+            m.vy = Math.sin(angle) * CHASE_SPEED;
           } else {
             // Random wander
             m.moveTimer--;
