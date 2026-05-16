@@ -386,6 +386,7 @@ interface MonsterState {
   clawSwing: number;    // frames remaining in current claw attack (0 = not attacking)
   clawAngle: number;    // world angle toward player when attack was started
   clawHit: boolean;     // whether this swing already dealt damage
+  freezeTimer: number;  // frames remaining frozen after landing a hit
 }
 
 function normalizeAngle(a: number): number {
@@ -440,7 +441,7 @@ function spawnMonsters(level: Level, levelIdx: number): MonsterState[] {
     moveTimer: Math.floor(Math.random() * 80),
     hitCooldown: 0, hitFlash: 0,
     aggroed: false, attackCooldown: 0,
-    clawSwing: 0, clawAngle: 0, clawHit: false,
+    clawSwing: 0, clawAngle: 0, clawHit: false, freezeTimer: 0,
   }));
 }
 
@@ -581,6 +582,15 @@ function drawMonster(
     ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(12, -6); ctx.stroke();
     ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(14,  0); ctx.stroke();
     ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(12,  6); ctx.stroke();
+    ctx.restore();
+  }
+
+  // Freeze tint
+  if (m.freezeTimer > 0) {
+    ctx.save();
+    ctx.globalAlpha = 0.45 * Math.min(1, m.freezeTimer / 30);
+    ctx.fillStyle = "#88ccff";
+    ctx.fillRect(ox, oy, renderW, renderH);
     ctx.restore();
   }
 
@@ -979,6 +989,7 @@ export default function Play() {
           if (m.hitCooldown    > 0) m.hitCooldown--;
           if (m.hitFlash       > 0) m.hitFlash--;
           if (m.attackCooldown > 0) m.attackCooldown--;
+          if (m.freezeTimer    > 0) m.freezeTimer--;
 
           const dist = Math.hypot(m.x - pcx, m.y - pcy);
 
@@ -988,11 +999,12 @@ export default function Play() {
           }
 
           // Trigger claw swing when close enough and cooldown ready
-          if (m.aggroed && m.clawSwing === 0 && m.attackCooldown === 0 && dist <= CLAW_REACH + 20) {
+          if (m.aggroed && m.clawSwing === 0 && m.attackCooldown === 0 && m.freezeTimer === 0 && dist <= CLAW_REACH + 20) {
             m.clawSwing  = CLAW_FRAMES;
             m.clawAngle  = Math.atan2(pcy - m.y, pcx - m.x);
             m.clawHit    = false;
             m.attackCooldown = ATTACK_CD;
+            m.freezeTimer = 240; // 4 seconds at 60 fps
           }
 
           if (m.clawSwing > 0) {
@@ -1015,6 +1027,9 @@ export default function Play() {
               if (pHpRef.current <= 0) { deadRef.current = true; setDead(true); }
             }
             m.clawSwing--;
+          } else if (m.freezeTimer > 0) {
+            // Stunned after landing a hit
+            m.vx = 0; m.vy = 0;
           } else if (m.aggroed) {
             // Chase
             const angle = Math.atan2(pcy - m.y, pcx - m.x);
