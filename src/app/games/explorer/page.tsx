@@ -123,6 +123,21 @@ export default function Explorer() {
         — PRESS ENTER —
       </Link>
 
+      <div className="flex flex-col items-center gap-3">
+        <Link
+          href="/games/explorer/play"
+          className="font-mono tracking-[0.2em] text-sm text-slate-400 border border-white/15 px-8 py-2 hover:bg-white/5 hover:text-white transition-colors"
+        >
+          SKIP TUTORIAL →
+        </Link>
+        <Link
+          href="/games/explorer/tutorial"
+          className="font-mono tracking-[0.2em] text-xs text-sky-400 hover:text-sky-300 transition-colors"
+        >
+          ? HOW TO PLAY
+        </Link>
+      </div>
+
       <Link
         href="/games"
         className="text-slate-500 font-mono text-sm hover:text-slate-300 transition-colors tracking-widest"
