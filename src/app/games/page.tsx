@@ -15,6 +15,13 @@ const games = [
     emoji: "🗡️",
     madeBy: "Dylan",
   },
+  {
+    title: "Janitor",
+    description: "First-person office cleaning sim. Find every mess.",
+    href: "/games/janitor",
+    emoji: "🧹",
+    madeBy: "Dylan",
+  },
 ];
 
 export default function Games() {
