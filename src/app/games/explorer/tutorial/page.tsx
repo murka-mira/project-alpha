@@ -468,7 +468,7 @@ export default function Tutorial() {
       {/* HUD */}
       <div className="flex items-center justify-between px-4 py-2 bg-black/50 backdrop-blur-sm border-b border-white/10 font-mono text-xs text-slate-400 shrink-0">
         <div className="flex items-center gap-3">
-          <span className="text-yellow-300 font-bold tracking-widest">VOID EXPLORER — TUTORIAL</span>
+          <span className="text-yellow-300 font-bold tracking-widest">OPERATION COLLOSSUS — TUTORIAL</span>
           <div className="flex items-center gap-0.5" title={`${playerHp} / ${PLAYER_MAX_HP} HP`}>
             {Array.from({ length: 10 }, (_, i) => (
               <span key={i} style={{ fontSize: 13, lineHeight: 1, color: i < Math.ceil(playerHp / 10) ? (playerHp <= 20 ? "#ff2222" : "#ff5555") : "#3a1a1a", textShadow: i < Math.ceil(playerHp / 10) ? "0 0 4px #ff0000" : "none" }}>♥</span>

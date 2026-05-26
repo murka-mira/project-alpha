@@ -9,7 +9,7 @@ const games = [
     madeBy: "Dylan",
   },
   {
-    title: "Void Explorer",
+    title: "Operation Collossus",
     description: "A retro top-down adventure game.",
     href: "/games/explorer",
     emoji: "🗡️",

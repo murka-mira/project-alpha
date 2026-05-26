@@ -193,7 +193,10 @@ function buildMazeMap(def: MazeDef) {
   const doorTileX = offC + (cellW - 1) * S + 1;
   const doorTileY = offR + (cellH - 1) * S + 1;
 
-  return { map, spawnTileX, spawnTileY, doorTileX, doorTileY };
+  // Chest at top-right corner cell (cellW-1, 0)
+  const chestTileX = offC + (cellW - 1) * S + 1;
+  const chestTileY = offR + 1;
+  return { map, spawnTileX, spawnTileY, doorTileX, doorTileY, chestTileX, chestTileY };
 }
 
 // ── Levels ─────────────────────────────────────────────────────────────────────
@@ -213,10 +216,12 @@ type Level = {
   doorTileY: number;
   spawnX: number;
   spawnY: number;
+  chestTileX: number;
+  chestTileY: number;
 };
 
 const LEVELS: Level[] = MAZE_DEFS.map(({ def, name }) => {
-  const { map, spawnTileX, spawnTileY, doorTileX, doorTileY } = buildMazeMap(def);
+  const { map, spawnTileX, spawnTileY, doorTileX, doorTileY, chestTileX, chestTileY } = buildMazeMap(def);
   return {
     name,
     map,
@@ -224,6 +229,8 @@ const LEVELS: Level[] = MAZE_DEFS.map(({ def, name }) => {
     doorTileY,
     spawnX: spawnTileX * TS,
     spawnY: spawnTileY * TS,
+    chestTileX,
+    chestTileY,
   };
 });
 
@@ -279,6 +286,31 @@ function drawDoor(ctx: CanvasRenderingContext2D, sx: number, sy: number, isExit:
   ctx.font = "bold 8px monospace";
   ctx.textAlign = "center";
   ctx.fillText(locked ? "LOCKED" : isExit ? "EXIT ▶" : "NEXT ▶", sx + 16, sy + 38);
+  ctx.textAlign = "left";
+}
+
+function drawChest(ctx: CanvasRenderingContext2D, sx: number, sy: number, open: boolean) {
+  // Body
+  ctx.fillStyle = "#5c3a14";
+  ctx.fillRect(sx + 2, sy + 16, 28, 14);
+  // Inner
+  ctx.fillStyle = open ? "#e8c46a" : "#1a0e06";
+  ctx.fillRect(sx + 5, sy + 18, 22, 10);
+  // Lid
+  ctx.fillStyle = open ? "#7a5020" : "#5c3a14";
+  ctx.fillRect(sx + 2, sy + 8, 28, 10);
+  ctx.fillStyle = "#6b4318";
+  ctx.fillRect(sx + 2, sy + 6, 28, 4);
+  // Gold latch
+  ctx.fillStyle = "#c8a000";
+  ctx.fillRect(sx + 12, sy + 13, 8, 5);
+  ctx.fillStyle = open ? "#ffe066" : "#9a7a00";
+  ctx.fillRect(sx + 14, sy + 14, 4, 3);
+  // Label
+  ctx.fillStyle = open ? "#ffe066" : "#e8c46a";
+  ctx.font = "bold 7px monospace";
+  ctx.textAlign = "center";
+  ctx.fillText(open ? "OPENED" : "CHEST", sx + 16, sy + 36);
   ctx.textAlign = "left";
 }
 
@@ -819,6 +851,7 @@ export default function Play() {
   const [swordEquipped, setSwordEquipped] = useState(false);
   const equippedRef                       = useRef(false);
   const swingRef                          = useRef(0);
+  const chestsOpenedRef                   = useRef<boolean[]>(LEVELS.map(() => false));
   const [armor]   = useState<(Item | null)[]>(STARTING_ARMOR);
   const [storage] = useState<(Item | null)[]>(STARTING_STORAGE);
   const [hotbar]  = useState<(Item | null)[]>(STARTING_HOTBAR);
@@ -864,7 +897,7 @@ export default function Play() {
     const walkFrameRef      = { current: 0 as 0 | 1 };
     const wonRef            = { current: false };
     const deadRef           = { current: false };
-    const doorBlockedRef    = { current: 0 };
+    const chestMsgRef       = { current: 0 };
     const pHpRef            = { current: PLAYER_MAX_HP };
     const pHitCooldown      = { current: 0 };
     const pHitFlash         = { current: 0 };
@@ -951,29 +984,39 @@ export default function Play() {
           const dcx = level.doorTileX * TS + TS / 2;
           const dcy = level.doorTileY * TS + TS / 2;
           if (Math.hypot(pcx - dcx, pcy - dcy) < 22) {
-            const allDead = monsters.every(m => m.hp <= 0);
-            if (!allDead) {
-              doorBlockedRef.current = 120;
+            const nextLevel = levelRef.current + 1;
+            if (nextLevel >= LEVELS.length) {
+              wonRef.current = true;
+              flashRef.current = 255;
+              setWon(true);
             } else {
-              const nextLevel = levelRef.current + 1;
-              if (nextLevel >= LEVELS.length) {
-                wonRef.current = true;
-                flashRef.current = 255;
-                setWon(true);
-              } else {
-                levelRef.current = nextLevel;
-                const nl = LEVELS[nextLevel];
-                player.x = nl.spawnX;
-                player.y = nl.spawnY;
-                monsters = spawnMonsters(nl, nextLevel);
-                flashRef.current = 255;
-                cooldown.current = 90;
-                setLevelName(nl.name);
-              }
+              levelRef.current = nextLevel;
+              const nl = LEVELS[nextLevel];
+              player.x = nl.spawnX;
+              player.y = nl.spawnY;
+              monsters = spawnMonsters(nl, nextLevel);
+              flashRef.current = 255;
+              cooldown.current = 90;
+              setLevelName(nl.name);
             }
           }
         }
       }
+
+      // Chest detection
+      if (!inventoryOpenRef.current) {
+        const pcx = player.x + SPRITE_W / 2;
+        const pcy = player.y + SPRITE_H / 2;
+        const chestCx = level.chestTileX * TS + TS / 2;
+        const chestCy = level.chestTileY * TS + TS / 2;
+        if (!chestsOpenedRef.current[levelRef.current] && Math.hypot(pcx - chestCx, pcy - chestCy) < 28) {
+          chestsOpenedRef.current[levelRef.current] = true;
+          pHpRef.current = Math.min(PLAYER_MAX_HP, pHpRef.current + 30);
+          setPlayerHp(pHpRef.current);
+          chestMsgRef.current = 150;
+        }
+      }
+      if (chestMsgRef.current > 0) chestMsgRef.current--;
 
       // ── Monster AI ────────────────────────────────────────────────────────
       if (!inventoryOpenRef.current) {
@@ -1118,8 +1161,11 @@ export default function Play() {
 
       const dsx = Math.round(level.doorTileX * TS - camX);
       const dsy = Math.round(level.doorTileY * TS - camY);
-      const allDead = monsters.every(m => m.hp <= 0);
-      drawDoor(ctx, dsx, dsy, levelRef.current === LEVELS.length - 1, !allDead);
+      drawDoor(ctx, dsx, dsy, levelRef.current === LEVELS.length - 1, false);
+
+      const chestSx = Math.round(level.chestTileX * TS - camX);
+      const chestSy = Math.round(level.chestTileY * TS - camY);
+      drawChest(ctx, chestSx, chestSy, chestsOpenedRef.current[levelRef.current]);
 
       for (const m of monsters) {
         if (m.hp > 0) drawMonster(ctx, m, camX, camY);
@@ -1147,18 +1193,17 @@ export default function Play() {
         flashRef.current = Math.max(0, flashRef.current - 14);
       }
 
-      if (doorBlockedRef.current > 0) {
-        const alpha = Math.min(1, doorBlockedRef.current / 30);
+      if (chestMsgRef.current > 0) {
+        const alpha = Math.min(1, chestMsgRef.current / 30);
         ctx.save();
         ctx.globalAlpha = alpha;
         ctx.font = "bold 15px monospace";
         ctx.textAlign = "center";
         ctx.fillStyle = "#000";
-        ctx.fillText("DEFEAT ALL MONSTERS FIRST!", W / 2 + 1, H / 2 - 29);
-        ctx.fillStyle = "#ff5555";
-        ctx.fillText("DEFEAT ALL MONSTERS FIRST!", W / 2, H / 2 - 30);
+        ctx.fillText("CHEST OPENED!  +30 HP", W / 2 + 1, H / 2 - 29);
+        ctx.fillStyle = "#ffd700";
+        ctx.fillText("CHEST OPENED!  +30 HP", W / 2, H / 2 - 30);
         ctx.restore();
-        doorBlockedRef.current--;
       }
 
       animId = requestAnimationFrame(loop);
@@ -1183,7 +1228,7 @@ export default function Play() {
       {/* HUD */}
       <div className="flex items-center justify-between px-4 py-2 bg-black/50 backdrop-blur-sm border-b border-white/10 font-mono text-xs text-slate-400 shrink-0">
         <div className="flex items-center gap-3">
-          <span className="text-yellow-300 font-bold tracking-widest">VOID EXPLORER</span>
+          <span className="text-yellow-300 font-bold tracking-widest">OPERATION COLLOSSUS</span>
           <div className="flex items-center gap-0.5" title={`${playerHp} / ${PLAYER_MAX_HP} HP`}>
             {Array.from({ length: 10 }, (_, i) => (
               <span key={i} style={{

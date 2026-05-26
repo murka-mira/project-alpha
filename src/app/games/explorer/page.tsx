@@ -87,9 +87,9 @@ export default function Explorer() {
         className="text-6xl font-bold tracking-widest text-yellow-300 mb-14 font-mono"
         style={{ textShadow: "0 0 30px rgba(253,224,71,0.4), 0 0 60px rgba(253,224,71,0.15)" }}
       >
-        VOID
+        OPERATION
         <br />
-        EXPLORER
+        COLLOSSUS
       </h1>
 
       {/* Character with glow */}
