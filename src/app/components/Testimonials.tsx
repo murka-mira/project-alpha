@@ -32,7 +32,7 @@ export default function Testimonials() {
           <p className="text-sm font-semibold uppercase tracking-widest text-ocean">
             Testimonials
           </p>
-          <h2 className="mt-3 text-3xl font-bold tracking-tight text-ink sm:text-4xl">
+          <h2 className="mt-3 text-3xl font-semibold tracking-tight text-ink sm:text-4xl">
             Trusted by local businesses
           </h2>
         </div>
@@ -45,18 +45,18 @@ export default function Testimonials() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, amount: 0.3 }}
               transition={{ duration: 0.5, delay: i * 0.1 }}
-              className="flex flex-col rounded-3xl border border-black/5 bg-white p-7 shadow-sm transition-shadow duration-300 hover:shadow-lg"
+              className="flex flex-col rounded-2xl border border-line bg-white p-7 shadow-sm transition-shadow duration-300 hover:shadow-lg"
             >
-              <div className="flex gap-0.5 text-aqua">
+              <div className="flex gap-0.5 text-ocean">
                 {Array.from({ length: 5 }).map((_, idx) => (
-                  <Star key={idx} size={16} fill="currentColor" strokeWidth={0} />
+                  <Star key={idx} size={15} fill="currentColor" strokeWidth={0} />
                 ))}
               </div>
               <blockquote className="mt-4 flex-1 text-sm leading-relaxed text-ink-soft">
                 &ldquo;{t.quote}&rdquo;
               </blockquote>
               <figcaption className="mt-6 flex items-center gap-3">
-                <span className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-ocean to-green text-sm font-semibold text-white">
+                <span className="flex h-10 w-10 items-center justify-center rounded-full bg-navy text-sm font-semibold text-white">
                   {t.name.charAt(0)}
                 </span>
                 <div>

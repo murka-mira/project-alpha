@@ -20,7 +20,7 @@ export default function Contact() {
             <p className="text-sm font-semibold uppercase tracking-widest text-ocean">
               Contact
             </p>
-            <h2 className="mt-3 text-3xl font-bold tracking-tight text-ink sm:text-4xl">
+            <h2 className="mt-3 text-3xl font-semibold tracking-tight text-ink sm:text-4xl">
               Let&apos;s build your website
             </h2>
             <p className="mt-4 text-ink-soft">
@@ -54,10 +54,10 @@ export default function Contact() {
             transition={{ duration: 0.6 }}
             className="lg:col-span-3"
           >
-            <div className="rounded-3xl border border-black/5 bg-white p-8 shadow-sm sm:p-10">
+            <div className="rounded-2xl border border-line bg-white p-8 shadow-sm sm:p-10">
               {status === "sent" ? (
                 <div className="flex flex-col items-center justify-center py-12 text-center">
-                  <span className="flex h-14 w-14 items-center justify-center rounded-full bg-gradient-to-br from-aqua to-green text-white">
+                  <span className="flex h-14 w-14 items-center justify-center rounded-full bg-navy text-white">
                     <CheckCircle2 size={28} />
                   </span>
                   <h3 className="mt-5 text-xl font-semibold text-ink">
@@ -83,7 +83,7 @@ export default function Contact() {
                         name="name"
                         type="text"
                         required
-                        className="w-full rounded-xl border border-black/10 bg-mist/60 px-4 py-3 text-sm text-ink outline-none transition-colors focus:border-ocean focus:bg-white"
+                        className="w-full rounded-xl border border-line bg-mist/60 px-4 py-3 text-sm text-ink outline-none transition-colors focus:border-ocean focus:bg-white"
                         placeholder="Jane Smith"
                       />
                     </div>
@@ -99,7 +99,7 @@ export default function Contact() {
                         name="email"
                         type="email"
                         required
-                        className="w-full rounded-xl border border-black/10 bg-mist/60 px-4 py-3 text-sm text-ink outline-none transition-colors focus:border-ocean focus:bg-white"
+                        className="w-full rounded-xl border border-line bg-mist/60 px-4 py-3 text-sm text-ink outline-none transition-colors focus:border-ocean focus:bg-white"
                         placeholder="jane@business.com"
                       />
                     </div>
@@ -116,7 +116,7 @@ export default function Contact() {
                       id="business"
                       name="business"
                       type="text"
-                      className="w-full rounded-xl border border-black/10 bg-mist/60 px-4 py-3 text-sm text-ink outline-none transition-colors focus:border-ocean focus:bg-white"
+                      className="w-full rounded-xl border border-line bg-mist/60 px-4 py-3 text-sm text-ink outline-none transition-colors focus:border-ocean focus:bg-white"
                       placeholder="Your Business"
                     />
                   </div>
@@ -133,14 +133,14 @@ export default function Contact() {
                       name="message"
                       required
                       rows={4}
-                      className="w-full resize-none rounded-xl border border-black/10 bg-mist/60 px-4 py-3 text-sm text-ink outline-none transition-colors focus:border-ocean focus:bg-white"
+                      className="w-full resize-none rounded-xl border border-line bg-mist/60 px-4 py-3 text-sm text-ink outline-none transition-colors focus:border-ocean focus:bg-white"
                       placeholder="Tell me about your project..."
                     />
                   </div>
 
                   <button
                     type="submit"
-                    className="group inline-flex w-full items-center justify-center gap-2 rounded-full bg-gradient-to-r from-ocean via-aqua to-green px-6 py-3.5 text-sm font-semibold text-navy shadow-lg shadow-ocean/20 transition-all hover:-translate-y-0.5 hover:shadow-xl sm:w-auto"
+                    className="group inline-flex w-full items-center justify-center gap-2 rounded-full bg-navy px-6 py-3.5 text-sm font-semibold text-white shadow-lg shadow-ink/10 transition-all hover:-translate-y-0.5 hover:shadow-xl sm:w-auto"
                   >
                     Send Message
                     <Send

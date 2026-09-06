@@ -1,17 +1,18 @@
 @import "tailwindcss";
 
 :root {
-  --navy: #061524;
-  --navy-2: #0a2138;
-  --navy-3: #0e2c49;
-  --ocean: #0f5f92;
-  --ocean-2: #1a80bd;
-  --aqua: #3fd0e0;
-  --aqua-2: #7be8ef;
-  --green: #2bd6a0;
-  --mist: #f2f9fc;
-  --ink: #061524;
-  --ink-soft: #45607a;
+  --navy: #050f1c;
+  --navy-2: #081729;
+  --navy-3: #0b1f38;
+  --ocean: #1364a3;
+  --ocean-2: #1c86c9;
+  --aqua: #4bd8e6;
+  --aqua-2: #8fe9ef;
+  --green: #34d399;
+  --mist: #f7f9fb;
+  --ink: #0a0e14;
+  --ink-soft: #5b6472;
+  --line: #e7eaee;
 
   --background: #ffffff;
   --foreground: var(--ink);
@@ -31,18 +32,39 @@
   --color-mist: var(--mist);
   --color-ink: var(--ink);
   --color-ink-soft: var(--ink-soft);
+  --color-line: var(--line);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+  --font-heading: var(--font-heading);
 }
 
 html {
   scroll-behavior: smooth;
 }
 
+section[id] {
+  scroll-margin-top: 5rem;
+}
+
 body {
   background: var(--background);
   color: var(--foreground);
   font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
+}
+
+h1, h2, h3 {
+  font-family: var(--font-heading), var(--font-geist-sans), ui-sans-serif, system-ui;
+  letter-spacing: -0.02em;
+}
+
+/* Hide scrollbar for horizontal scroll showcases while keeping scroll functional */
+.no-scrollbar {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
 }
 
 ::selection {
@@ -136,9 +158,25 @@ body {
 }
 
 /* Utility: fine grain noise-free gradient text */
-.text-gradient-aqua {
-  background: linear-gradient(90deg, var(--aqua), var(--green));
+.text-gradient-ocean {
+  background: linear-gradient(100deg, var(--aqua) 0%, var(--ocean-2) 100%);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
+}
+
+/* Seamless horizontal wave loop: wrapper is 200% wide with two
+   identical copies of the wave side by side; translating by -50%
+   scrolls exactly one copy's width, so it loops with no visible seam. */
+@keyframes wave-loop {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.animate-wave-loop {
+  animation: wave-loop linear infinite;
 }

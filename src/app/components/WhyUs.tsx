@@ -9,34 +9,38 @@ const reasons = [
     title: "Direct with your designer",
     description:
       "No account managers or middlemen — you work directly with me from kickoff to launch.",
+    accent: "from-ocean-2 to-aqua",
   },
   {
     title: "Built for local businesses",
     description:
       "I specialize in helping local brands look as credible as national ones online.",
+    accent: "from-aqua to-ocean-2",
   },
   {
     title: "Fast turnaround",
     description:
       "Most sites go from kickoff to launch in a matter of weeks, not months.",
+    accent: "from-aqua to-green",
   },
   {
     title: "Modern tech, built to last",
     description:
       "Clean, maintainable code on a modern stack — no bloated page builders.",
+    accent: "from-ocean-2 to-aqua",
   },
 ];
 
 export default function WhyUs() {
   return (
-    <section className="relative overflow-hidden bg-gradient-to-b from-navy-3 via-navy-2 to-navy py-24 sm:py-32">
+    <section id="about" className="relative overflow-hidden bg-gradient-to-b from-navy-3 via-navy-2 to-navy py-24 sm:py-32">
       <div
         aria-hidden
         className="animate-blob absolute -right-40 top-1/3 h-96 w-96 rounded-full bg-aqua/10 blur-[120px]"
       />
       <div
         aria-hidden
-        className="animate-blob absolute -left-40 bottom-0 h-80 w-80 rounded-full bg-green/10 blur-[110px]"
+        className="animate-blob absolute -left-40 bottom-0 h-80 w-80 rounded-full bg-ocean-2/10 blur-[110px]"
         style={{ animationDelay: "-5s" }}
       />
 
@@ -45,7 +49,7 @@ export default function WhyUs() {
           <p className="text-sm font-semibold uppercase tracking-widest text-aqua-2">
             Why Waveform Web
           </p>
-          <h2 className="mt-3 text-3xl font-bold tracking-tight text-white sm:text-4xl">
+          <h2 className="mt-3 text-3xl font-semibold tracking-tight text-white sm:text-4xl">
             A dedicated designer, not a call center
           </h2>
           <p className="mt-4 max-w-md text-white/60">
@@ -64,7 +68,7 @@ export default function WhyUs() {
               transition={{ duration: 0.5, delay: i * 0.08 }}
               className="glass rounded-2xl p-6"
             >
-              <span className="flex h-9 w-9 items-center justify-center rounded-full bg-gradient-to-br from-aqua to-green text-navy">
+              <span className={`flex h-9 w-9 items-center justify-center rounded-full bg-gradient-to-br text-navy ${reason.accent}`}>
                 <Check size={16} strokeWidth={3} />
               </span>
               <h3 className="mt-4 text-base font-semibold text-white">
