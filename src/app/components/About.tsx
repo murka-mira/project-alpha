@@ -4,16 +4,35 @@ import Image from "next/image";
 import { motion } from "framer-motion";
 import { Fish, Laptop } from "lucide-react";
 
-function SurfboardDoodle({ className }: { className?: string }) {
+function SurfboardDoodle({
+  size = 24,
+  strokeWidth = 1.75,
+  className,
+}: {
+  size?: number;
+  strokeWidth?: number;
+  className?: string;
+}) {
   return (
-    <svg viewBox="0 0 24 24" fill="none" className={className}>
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      width={size}
+      height={size}
+      className={className}
+    >
       <path
         d="M12 2c3 4 5 10 5 14a5 5 0 0 1-10 0c0-4 2-10 5-14Z"
         stroke="currentColor"
-        strokeWidth="1.75"
+        strokeWidth={strokeWidth}
         strokeLinejoin="round"
       />
-      <path d="M12 6v13" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+      <path
+        d="M12 6v13"
+        stroke="currentColor"
+        strokeWidth={Math.max(strokeWidth - 0.25, 1)}
+        strokeLinecap="round"
+      />
     </svg>
   );
 }
