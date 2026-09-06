@@ -13,8 +13,9 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Project Alpha",
-  description: "Project Alpha",
+  title: "Waveform Web | Modern Websites for Local Businesses",
+  description:
+    "Waveform Web creates modern, fast, professional websites for local businesses.",
 };
 
 export default function RootLayout({
@@ -24,7 +25,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-      <body>{children}</body>
+      <body className="bg-white text-ink">{children}</body>
     </html>
   );
 }

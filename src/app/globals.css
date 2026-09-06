@@ -1,19 +1,144 @@
 @import "tailwindcss";
 
 :root {
-  --background: #f0f7ff;
-  --foreground: #0f172a;
+  --navy: #061524;
+  --navy-2: #0a2138;
+  --navy-3: #0e2c49;
+  --ocean: #0f5f92;
+  --ocean-2: #1a80bd;
+  --aqua: #3fd0e0;
+  --aqua-2: #7be8ef;
+  --green: #2bd6a0;
+  --mist: #f2f9fc;
+  --ink: #061524;
+  --ink-soft: #45607a;
+
+  --background: #ffffff;
+  --foreground: var(--ink);
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+  --color-navy: var(--navy);
+  --color-navy-2: var(--navy-2);
+  --color-navy-3: var(--navy-3);
+  --color-ocean: var(--ocean);
+  --color-ocean-2: var(--ocean-2);
+  --color-aqua: var(--aqua);
+  --color-aqua-2: var(--aqua-2);
+  --color-green: var(--green);
+  --color-mist: var(--mist);
+  --color-ink: var(--ink);
+  --color-ink-soft: var(--ink-soft);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+}
+
+html {
+  scroll-behavior: smooth;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
   font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
+}
+
+::selection {
+  background: var(--aqua);
+  color: var(--navy);
+}
+
+/* Glassmorphism */
+.glass {
+  background: rgba(255, 255, 255, 0.06);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.glass-navy {
+  background: rgba(6, 21, 36, 0.72);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.glass-light {
+  background: rgba(255, 255, 255, 0.65);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+}
+
+/* Wave / blob motion */
+@keyframes wave-drift {
+  0% {
+    transform: translateX(0) translateY(0);
+  }
+  50% {
+    transform: translateX(-2%) translateY(6px);
+  }
+  100% {
+    transform: translateX(0) translateY(0);
+  }
+}
+
+.animate-wave-drift {
+  animation: wave-drift 10s ease-in-out infinite;
+}
+
+@keyframes wave-drift-slow {
+  0% {
+    transform: translateX(0) translateY(0);
+  }
+  50% {
+    transform: translateX(2%) translateY(-8px);
+  }
+  100% {
+    transform: translateX(0) translateY(0);
+  }
+}
+
+.animate-wave-drift-slow {
+  animation: wave-drift-slow 16s ease-in-out infinite;
+}
+
+@keyframes blob-float {
+  0%, 100% {
+    transform: translate(0, 0) scale(1);
+  }
+  33% {
+    transform: translate(3%, -4%) scale(1.05);
+  }
+  66% {
+    transform: translate(-2%, 3%) scale(0.97);
+  }
+}
+
+.animate-blob {
+  animation: blob-float 14s ease-in-out infinite;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.animate-shimmer {
+  background-size: 200% 100%;
+  animation: shimmer 3s linear infinite;
+}
+
+/* Utility: fine grain noise-free gradient text */
+.text-gradient-aqua {
+  background: linear-gradient(90deg, var(--aqua), var(--green));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
 }

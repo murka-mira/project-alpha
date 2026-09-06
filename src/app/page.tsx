@@ -1,7 +1,29 @@
+import Navbar from "./components/Navbar";
+import Hero from "./components/Hero";
+import Portfolio from "./components/Portfolio";
+import Services from "./components/Services";
+import WhyUs from "./components/WhyUs";
+import Process from "./components/Process";
+import Testimonials from "./components/Testimonials";
+import CTA from "./components/CTA";
+import Contact from "./components/Contact";
+import Footer from "./components/Footer";
+
 export default function Home() {
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center p-24">
-      <h1 className="text-4xl font-bold">Project Alpha</h1>
-    </main>
+    <>
+      <Navbar />
+      <main>
+        <Hero />
+        <Portfolio />
+        <Services />
+        <WhyUs />
+        <Process />
+        <Testimonials />
+        <CTA />
+        <Contact />
+      </main>
+      <Footer />
+    </>
   );
 }
