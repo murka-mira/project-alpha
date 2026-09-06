@@ -36,6 +36,7 @@
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
   --font-heading: var(--font-heading);
+  --font-hand: var(--font-hand);
 }
 
 html {
@@ -179,4 +180,23 @@ h1, h2, h3 {
 
 .animate-wave-loop {
   animation: wave-loop linear infinite;
+}
+
+/* Handwritten accent font, used sparingly for a personal, homemade touch */
+.font-hand {
+  font-family: var(--font-hand), cursive;
+}
+
+/* Gentle wobble for hand-drawn doodles */
+@keyframes wobble {
+  0%, 100% {
+    transform: rotate(var(--wobble-from, -3deg));
+  }
+  50% {
+    transform: rotate(var(--wobble-to, 3deg));
+  }
+}
+
+.animate-wobble {
+  animation: wobble 4s ease-in-out infinite;
 }

@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono, Space_Grotesk } from "next/font/google";
+import { Geist, Geist_Mono, Space_Grotesk, Caveat } from "next/font/google";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -17,10 +17,16 @@ const spaceGrotesk = Space_Grotesk({
   subsets: ["latin"],
 });
 
+const caveat = Caveat({
+  variable: "--font-hand",
+  subsets: ["latin"],
+  weight: ["600", "700"],
+});
+
 export const metadata: Metadata = {
   title: "Waveform Web | Modern Websites for Local Businesses",
   description:
-    "Waveform Web creates modern websites that help local businesses look better, reach more customers, and grow online.",
+    "I design modern websites for local businesses that want to look their best online. Waveform Web is a one-person web design studio in Southern California.",
 };
 
 export default function RootLayout({
@@ -31,7 +37,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} ${spaceGrotesk.variable} antialiased`}
+      className={`${geistSans.variable} ${geistMono.variable} ${spaceGrotesk.variable} ${caveat.variable} antialiased`}
     >
       <body className="bg-white text-ink">{children}</body>
     </html>

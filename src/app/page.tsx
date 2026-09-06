@@ -1,11 +1,12 @@
 import Navbar from "./components/Navbar";
 import Hero from "./components/Hero";
-import TrustStrip from "./components/TrustStrip";
-import Portfolio from "./components/Portfolio";
+import About from "./components/About";
+import WaveformIdea from "./components/WaveformIdea";
 import Services from "./components/Services";
-import WhyUs from "./components/WhyUs";
+import Portfolio from "./components/Portfolio";
 import Process from "./components/Process";
 import Pricing from "./components/Pricing";
+import WhyUs from "./components/WhyUs";
 import Testimonials from "./components/Testimonials";
 import CTA from "./components/CTA";
 import Contact from "./components/Contact";
@@ -17,12 +18,13 @@ export default function Home() {
       <Navbar />
       <main>
         <Hero />
-        <TrustStrip />
-        <Portfolio />
+        <About />
+        <WaveformIdea />
         <Services />
-        <WhyUs />
+        <Portfolio />
         <Process />
         <Pricing />
+        <WhyUs />
         <Testimonials />
         <CTA />
         <Contact />

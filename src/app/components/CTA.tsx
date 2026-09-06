@@ -20,17 +20,16 @@ export default function CTA() {
           </div>
 
           <h2 className="relative text-3xl font-semibold tracking-tight text-white sm:text-4xl">
-            Ready to put your business online?
+            Ready to make some waves?
           </h2>
           <p className="relative mx-auto mt-4 max-w-lg text-white/60">
-            Let&apos;s build a website that actually represents your
-            business — and brings in customers while you sleep.
+            Let&apos;s build a website that helps your business get noticed.
           </p>
           <a
             href="#contact"
-            className="group relative mt-8 inline-flex items-center gap-2.5 rounded-full bg-white px-8 py-3.5 text-sm font-semibold text-navy shadow-xl shadow-black/10 transition-all hover:-translate-y-0.5 hover:shadow-2xl"
+            className="group relative mt-8 inline-flex items-center gap-2.5 rounded-full bg-aqua px-8 py-3.5 text-sm font-semibold text-navy transition-all hover:-rotate-1 hover:scale-[1.03]"
           >
-            Let&apos;s Build It
+            Start a Project
             <ArrowRight
               size={16}
               className="transition-transform group-hover:translate-x-1"

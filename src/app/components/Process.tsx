@@ -7,23 +7,21 @@ const steps = [
   {
     icon: MessageSquare,
     number: "01",
-    title: "Tell me what you need",
-    description:
-      "A quick call or form about your business, your customers, and what your site needs to do.",
+    title: "We talk",
+    description: "Tell me about your business and what you're looking for.",
   },
   {
     icon: Hammer,
     number: "02",
-    title: "I build your website",
-    description:
-      "I design and build your site personally, with check-ins so you always know where things stand.",
+    title: "I build",
+    description: "I turn your idea into a modern website.",
   },
   {
     icon: Rocket,
     number: "03",
-    title: "You launch",
+    title: "We launch",
     description:
-      "Your site goes live — fast, polished, and ready to bring in new customers.",
+      "Your business gets a new place online to help bring in customers.",
   },
 ];
 
@@ -32,10 +30,10 @@ export default function Process() {
     <section id="process" className="relative bg-white py-24 sm:py-32">
       <div className="mx-auto max-w-2xl px-6 text-center">
         <p className="text-sm font-semibold uppercase tracking-widest text-ocean">
-          How It Works
+          Simple & Personal
         </p>
         <h2 className="mt-3 text-3xl font-semibold tracking-tight text-ink sm:text-4xl">
-          From idea to online.
+          My Process
         </h2>
       </div>
 

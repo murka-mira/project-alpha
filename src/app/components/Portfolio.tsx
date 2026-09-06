@@ -2,23 +2,29 @@
 
 import { useRef } from "react";
 import { motion } from "framer-motion";
-import { ArrowUpRight, ExternalLink, ChevronLeft, ChevronRight } from "lucide-react";
+import { ArrowRight, ChevronLeft, ChevronRight } from "lucide-react";
 import { SalonMockup, MarketplaceMockup } from "./PortfolioMockups";
 
 const projects = [
   {
     name: "Hair Design by Kevin",
     category: "Hair Salon",
+    description:
+      "A clean site for a local hair salon, built to make booking an appointment easy.",
     accent: "#8fe9ef",
     Mockup: SalonMockup,
     url: "https://no6.ebellabs.com/p/hair-design-by-kevin",
+    rotate: "-rotate-1",
   },
   {
     name: "Share Your Boat",
     category: "Boat Marketplace",
+    description:
+      "A listings marketplace connecting boat owners with people looking for a boat share.",
     accent: "#1c86c9",
     Mockup: MarketplaceMockup,
     url: "https://shareyourboat.com",
+    rotate: "rotate-1",
   },
 ];
 
@@ -29,7 +35,7 @@ export default function Portfolio() {
     const track = trackRef.current;
     if (!track) return;
     const card = track.querySelector("a");
-    const distance = card ? card.clientWidth + 24 : 360;
+    const distance = card ? card.clientWidth + 32 : 400;
     track.scrollBy({ left: distance * direction, behavior: "smooth" });
   }
 
@@ -38,15 +44,15 @@ export default function Portfolio() {
       <div className="mx-auto max-w-7xl px-6">
         <div className="flex flex-wrap items-end justify-between gap-6">
           <div className="max-w-2xl">
-            <p className="text-sm font-semibold uppercase tracking-widest text-ocean">
-              Featured Work
+            <p className="font-hand -rotate-1 text-2xl text-ocean">
+              Stuff I&apos;ve Built 🌊
             </p>
-            <h2 className="mt-3 text-3xl font-semibold tracking-tight text-ink sm:text-4xl">
-              Websites built to perform
+            <h2 className="mt-2 text-3xl font-semibold tracking-tight text-ink sm:text-4xl">
+              My Work
             </h2>
             <p className="mt-4 text-ink-soft">
-              A look at recent projects designed and built for local
-              businesses across Southern California.
+              A couple of real sites for real local businesses — more going
+              up here as I finish them.
             </p>
           </div>
 
@@ -82,19 +88,19 @@ export default function Portfolio() {
       >
         <div
           ref={trackRef}
-          className="no-scrollbar flex snap-x snap-mandatory justify-center gap-6 overflow-x-auto px-6 pb-4"
+          className="no-scrollbar flex snap-x snap-mandatory justify-center gap-8 overflow-x-auto px-6 py-4"
         >
           {projects.map((project, i) => (
             <motion.a
               key={project.name}
-              href={project.url ?? "#contact"}
-              target={project.url ? "_blank" : undefined}
-              rel={project.url ? "noopener noreferrer" : undefined}
+              href={project.url}
+              target="_blank"
+              rel="noopener noreferrer"
               initial={{ opacity: 0, y: 24 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, amount: 0.3 }}
-              transition={{ duration: 0.5, delay: i * 0.06 }}
-              className="group block w-[300px] shrink-0 snap-start overflow-hidden rounded-2xl border border-line bg-white shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-ink/[0.06] sm:w-[380px]"
+              transition={{ duration: 0.5, delay: i * 0.08 }}
+              className={`group block w-[300px] shrink-0 snap-start overflow-hidden rounded-2xl border border-line bg-white shadow-sm transition-transform duration-300 hover:-translate-y-1 hover:rotate-0 sm:w-[380px] ${project.rotate}`}
             >
               {/* Browser chrome */}
               <div className="flex items-center gap-1.5 border-b border-line px-4 py-3">
@@ -107,21 +113,22 @@ export default function Portfolio() {
                 <project.Mockup accent={project.accent} />
               </div>
 
-              <div className="flex items-center justify-between p-5">
-                <div>
-                  <p className="text-xs font-medium uppercase tracking-widest text-ink-soft">
-                    {project.category}
-                  </p>
-                  <h3 className="mt-1 text-base font-semibold text-ink">
-                    {project.name}
-                  </h3>
-                </div>
-                <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-mist text-ink transition-all duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:bg-ink group-hover:text-white">
-                  {project.url ? (
-                    <ExternalLink size={15} />
-                  ) : (
-                    <ArrowUpRight size={16} />
-                  )}
+              <div className="p-5">
+                <p className="text-xs font-medium uppercase tracking-widest text-ink-soft">
+                  {project.category}
+                </p>
+                <h3 className="mt-1 text-base font-semibold text-ink">
+                  {project.name}
+                </h3>
+                <p className="mt-2 text-sm leading-relaxed text-ink-soft">
+                  {project.description}
+                </p>
+                <span className="mt-3 inline-flex items-center gap-1.5 text-sm font-semibold text-ocean">
+                  View Project
+                  <ArrowRight
+                    size={14}
+                    className="transition-transform duration-300 group-hover:translate-x-1"
+                  />
                 </span>
               </div>
             </motion.a>

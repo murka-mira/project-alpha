@@ -1,32 +1,29 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { LayoutTemplate, Gauge, Smartphone, Search } from "lucide-react";
+import { LayoutTemplate, RefreshCw, Smartphone, Rocket } from "lucide-react";
 
 const services = [
   {
     icon: LayoutTemplate,
-    title: "Custom Web Design",
-    description:
-      "Original, on-brand designs tailored to your business — never a generic template.",
+    title: "Website Design",
+    description: "Modern websites designed specifically for your business.",
   },
   {
-    icon: Gauge,
-    title: "Performance & Speed",
-    description:
-      "Lightweight, optimized builds that load fast and keep visitors engaged.",
+    icon: RefreshCw,
+    title: "Website Redesign",
+    description: "Take an outdated website and give it a completely new look.",
   },
   {
     icon: Smartphone,
-    title: "Responsive Development",
-    description:
-      "Pixel-perfect across desktop, tablet, and mobile — built on modern frameworks.",
+    title: "Mobile-Friendly Design",
+    description: "Make sure customers have a great experience on phones and tablets.",
   },
   {
-    icon: Search,
-    title: "SEO Foundations",
+    icon: Rocket,
+    title: "Getting Online",
     description:
-      "Clean structure and on-page SEO so local customers can actually find you.",
+      "Help businesses that currently don't have a website establish their online presence.",
   },
 ];
 

@@ -30,14 +30,17 @@ export default function Navbar() {
     >
       <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
         <a href="#top" className="flex items-center gap-2.5">
-          <span className="flex h-7 w-7 items-center justify-center overflow-hidden rounded-full bg-gradient-to-br from-ocean to-aqua">
-            <svg viewBox="0 0 24 24" className="h-3.5 w-3.5 text-white">
+          <span className="flex h-8 w-8 items-center justify-center overflow-hidden rounded-full bg-gradient-to-br from-ocean to-aqua">
+            <svg viewBox="0 0 24 24" className="h-6 w-6">
+              <defs>
+                <linearGradient id="navLogoGrad" x1="0" y1="1" x2="1" y2="0">
+                  <stop offset="0%" stopColor="#ffffff" />
+                  <stop offset="100%" stopColor="#d7fbff" />
+                </linearGradient>
+              </defs>
               <path
-                d="M2 15c2-3 4-3 6 0s4 3 6 0 4-3 6 0"
-                stroke="currentColor"
-                strokeWidth="2"
-                fill="none"
-                strokeLinecap="round"
+                d="M2,15 C5,6 9,6 12,11 C15,16 19,16 22,8 L22,11 C19,19 15,19 12,14 C9,9 5,9 2,18 Z"
+                fill="url(#navLogoGrad)"
               />
             </svg>
           </span>
