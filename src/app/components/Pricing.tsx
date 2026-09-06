@@ -7,7 +7,7 @@ import { Check } from "lucide-react";
 const PACKAGES = [
   {
     name: "Starter",
-    price: 750,
+    price: 375,
     billing: "one-time",
     description: "A clean, professional one-page site to get you online fast.",
     features: [
@@ -21,7 +21,7 @@ const PACKAGES = [
   },
   {
     name: "Growth",
-    price: 1500,
+    price: 750,
     billing: "one-time",
     description: "The most popular choice for small businesses ready to grow.",
     features: [
@@ -36,7 +36,7 @@ const PACKAGES = [
   },
   {
     name: "Premium",
-    price: 2500,
+    price: 1250,
     billing: "one-time",
     description: "A full-featured site for businesses that need more.",
     features: [
