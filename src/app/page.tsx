@@ -6,7 +6,6 @@ import Services from "./components/Services";
 import Portfolio from "./components/Portfolio";
 import Process from "./components/Process";
 import Pricing from "./components/Pricing";
-import WhyUs from "./components/WhyUs";
 import Testimonials from "./components/Testimonials";
 import CTA from "./components/CTA";
 import Contact from "./components/Contact";
@@ -24,7 +23,6 @@ export default function Home() {
         <Portfolio />
         <Process />
         <Pricing />
-        <WhyUs />
         <Testimonials />
         <CTA />
         <Contact />
