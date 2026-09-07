@@ -60,7 +60,7 @@ export default function Contact() {
                 <span className="flex h-10 w-10 items-center justify-center rounded-full bg-white shadow-sm">
                   <MapPin size={17} className="text-ocean" />
                 </span>
-                Southern California
+                Irvine, California
               </div>
             </div>
           </div>

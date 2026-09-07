@@ -26,7 +26,7 @@ const caveat = Caveat({
 export const metadata: Metadata = {
   title: "Waveform Web | Modern Websites for Local Businesses",
   description:
-    "I design modern websites for local businesses that want to look their best online. Waveform Web is a one-person web design studio in Southern California.",
+    "I design modern websites for local businesses that want to look their best online. Waveform Web is a one-person web design studio in Irvine, California.",
 };
 
 export default function RootLayout({
