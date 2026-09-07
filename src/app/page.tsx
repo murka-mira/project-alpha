@@ -18,12 +18,12 @@ export default function Home() {
       <main>
         <Hero />
         <About />
-        <WaveformIdea />
         <Services />
         <Portfolio />
         <Process />
         <Pricing />
         <Testimonials />
+        <WaveformIdea />
         <CTA />
         <Contact />
       </main>
