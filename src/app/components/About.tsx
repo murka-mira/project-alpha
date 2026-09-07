@@ -52,7 +52,7 @@ const statusLines = [
 
 export default function About() {
   return (
-    <section id="about" className="relative bg-white py-24 sm:py-32">
+    <section id="about" className="relative bg-white py-16 sm:py-24">
       <div className="mx-auto max-w-6xl px-6">
         <div className="grid gap-14 lg:grid-cols-5 lg:items-center lg:gap-16">
           <motion.div

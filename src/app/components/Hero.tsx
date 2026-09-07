@@ -11,7 +11,7 @@ export default function Hero() {
       id="top"
       className="relative flex min-h-screen flex-col overflow-hidden bg-navy"
     >
-      <div className="relative flex flex-1 flex-col items-center justify-center px-6 pt-28 text-center">
+      <div className="relative flex flex-1 flex-col items-center justify-center px-6 pt-24 text-center">
         <motion.div
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}

@@ -31,7 +31,7 @@ export default function HostingCostsPage() {
   return (
     <>
       <Navbar />
-      <main className="bg-white pb-24 pt-32 sm:pb-32">
+      <main className="bg-white pb-16 pt-28 sm:pb-20">
         <div className="mx-auto max-w-2xl px-6">
           <p className="text-sm font-semibold uppercase tracking-widest text-ocean">
             Pricing

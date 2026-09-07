@@ -31,7 +31,7 @@ export default function Contact() {
   }
 
   return (
-    <section id="contact" className="relative bg-mist py-24 sm:py-32">
+    <section id="contact" className="relative bg-mist py-16 sm:py-24">
       <div className="mx-auto max-w-6xl px-6">
         <div className="grid gap-12 lg:grid-cols-5 lg:gap-16">
           <div className="lg:col-span-2">
@@ -62,6 +62,21 @@ export default function Contact() {
                 </span>
                 Irvine, California
               </div>
+            </div>
+
+            <div className="mt-10 hidden sm:block">
+              <p className="font-hand -rotate-1 text-xl text-ocean">
+                Let&apos;s make some waves together 🌊
+              </p>
+              <svg viewBox="0 0 200 20" className="mt-2 h-4 w-40">
+                <path
+                  d="M2 10 C 20 2, 35 18, 55 10 C 75 2, 90 18, 110 10 C 130 2, 145 18, 165 10 C 175 6, 185 12, 195 8"
+                  fill="none"
+                  stroke="#4bd8e6"
+                  strokeWidth="3"
+                  strokeLinecap="round"
+                />
+              </svg>
             </div>
           </div>
 

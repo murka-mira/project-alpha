@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import { LayoutTemplate, RefreshCw, Smartphone, Rocket } from "lucide-react";
+import { WaveDivider, CornerBubbles } from "./OceanDecor";
 
 const services = [
   {
@@ -29,7 +30,9 @@ const services = [
 
 export default function Services() {
   return (
-    <section id="services" className="relative bg-mist py-24 sm:py-32">
+    <section id="services" className="relative overflow-hidden bg-mist py-16 sm:py-24">
+      <WaveDivider className="absolute inset-x-0 top-0" />
+      <CornerBubbles className="left-0 top-6 sm:top-10" />
       <div className="mx-auto max-w-7xl px-6">
         <div className="mx-auto max-w-2xl text-center">
           <p className="text-sm font-semibold uppercase tracking-widest text-ocean">
@@ -44,7 +47,7 @@ export default function Services() {
           </p>
         </div>
 
-        <div className="mt-16 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
           {services.map((service, i) => (
             <motion.div
               key={service.title}

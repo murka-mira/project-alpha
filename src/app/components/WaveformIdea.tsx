@@ -2,10 +2,12 @@
 
 import { motion } from "framer-motion";
 import AnimatedWaves from "./AnimatedWaves";
+import { WaveDivider } from "./OceanDecor";
 
 export default function WaveformIdea() {
   return (
-    <section id="waveform" className="relative overflow-hidden bg-navy py-24 sm:py-32">
+    <section id="waveform" className="relative overflow-hidden bg-navy py-16 sm:py-24">
+      <WaveDivider className="absolute inset-x-0 top-0 opacity-70" />
       <div className="relative mx-auto max-w-3xl px-6 text-center">
         <p className="font-hand text-2xl text-aqua-2">
           The Waveform Idea
@@ -25,7 +27,7 @@ export default function WaveformIdea() {
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, amount: 0.5 }}
         transition={{ duration: 0.6, delay: 0.1 }}
-        className="relative mx-auto mt-14 h-48 max-w-4xl px-6 sm:h-56"
+        className="relative mx-auto mt-8 h-48 max-w-4xl px-6 sm:h-56"
       >
         <AnimatedWaves />
       </motion.div>

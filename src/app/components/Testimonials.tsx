@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import { Star } from "lucide-react";
+import { CornerBubbles } from "./OceanDecor";
 
 const testimonials = [
   {
@@ -26,7 +27,8 @@ const testimonials = [
 
 export default function Testimonials() {
   return (
-    <section id="testimonials" className="relative bg-mist py-24 sm:py-32">
+    <section id="testimonials" className="relative overflow-hidden bg-mist py-16 sm:py-24">
+      <CornerBubbles className="right-0 top-8 sm:top-12" />
       <div className="mx-auto max-w-7xl px-6">
         <div className="mx-auto max-w-2xl text-center">
           <p className="text-sm font-semibold uppercase tracking-widest text-ocean">
@@ -37,7 +39,7 @@ export default function Testimonials() {
           </h2>
         </div>
 
-        <div className="mt-16 grid gap-6 lg:grid-cols-3">
+        <div className="mt-10 grid gap-6 lg:grid-cols-3">
           {testimonials.map((t, i) => (
             <motion.figure
               key={t.name}

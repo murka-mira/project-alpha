@@ -38,7 +38,7 @@ export default function Portfolio() {
   }
 
   return (
-    <section id="work" className="relative bg-white py-24 sm:py-32">
+    <section id="work" className="relative bg-white py-16 sm:py-24">
       <div className="mx-auto max-w-7xl px-6">
         <div className="flex flex-wrap items-end justify-between gap-6">
           <div className="max-w-2xl">
@@ -76,7 +76,7 @@ export default function Portfolio() {
       </div>
 
       <div
-        className="relative mt-14"
+        className="relative mt-10"
         style={{
           maskImage:
             "linear-gradient(to right, transparent, black 4%, black 96%, transparent)",

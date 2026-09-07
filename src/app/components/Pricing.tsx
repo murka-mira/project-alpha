@@ -3,6 +3,7 @@
 import { motion } from "framer-motion";
 import { Check } from "lucide-react";
 import Link from "next/link";
+import { WaveDivider, CornerBubbles } from "./OceanDecor";
 
 // Edit prices/features here — nothing else in this file needs to change.
 const PACKAGES = [
@@ -54,7 +55,9 @@ const PACKAGES = [
 
 export default function Pricing() {
   return (
-    <section id="pricing" className="relative bg-mist py-24 sm:py-32">
+    <section id="pricing" className="relative overflow-hidden bg-mist py-16 sm:py-24">
+      <WaveDivider className="absolute inset-x-0 top-0" flip />
+      <CornerBubbles className="left-0 bottom-8 sm:bottom-12" />
       <div className="mx-auto max-w-7xl px-6">
         <div className="mx-auto max-w-2xl text-center">
           <p className="text-sm font-semibold uppercase tracking-widest text-ocean">
@@ -69,7 +72,7 @@ export default function Pricing() {
           </p>
         </div>
 
-        <div className="mt-16 grid gap-6 lg:grid-cols-3">
+        <div className="mt-10 grid gap-6 lg:grid-cols-3">
           {PACKAGES.map((pkg, i) => (
             <motion.div
               key={pkg.name}
