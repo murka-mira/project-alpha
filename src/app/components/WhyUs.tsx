@@ -13,10 +13,7 @@ export default function WhyUs() {
   return (
     <section id="why" className="relative bg-mist py-24 sm:py-32">
       <div className="mx-auto max-w-3xl px-6 text-center">
-        <p className="font-hand text-2xl text-ocean">
-          The Honest Version
-        </p>
-        <h2 className="mt-2 text-3xl font-semibold tracking-tight text-ink sm:text-4xl">
+        <h2 className="text-3xl font-semibold tracking-tight text-ink sm:text-4xl">
           Why Waveform Web?
         </h2>
       </div>
