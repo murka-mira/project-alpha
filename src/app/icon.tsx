@@ -19,7 +19,7 @@ export default function Icon() {
           alignItems: "center",
           justifyContent: "center",
           background: "#050f1c",
-          borderRadius: 8,
+          borderRadius: "50%",
           overflow: "hidden",
         }}
       >
@@ -28,7 +28,7 @@ export default function Icon() {
           alt=""
           width={32}
           height={32}
-          style={{ objectFit: "cover", objectPosition: "75% 40%" }}
+          style={{ objectFit: "cover" }}
         />
       </div>
     ),

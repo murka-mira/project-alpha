@@ -31,9 +31,7 @@ export default function Navbar() {
     >
       <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
         <a href="#top" className="flex items-center gap-2.5">
-          <span className="flex h-8 w-8 items-center justify-center overflow-hidden rounded-full bg-navy-3 ring-1 ring-white/10">
-            <WaveformMark className="h-6 w-6" />
-          </span>
+          <WaveformMark className="h-8 w-8 shrink-0 ring-1 ring-white/10" />
           <span className="text-[15px] font-semibold tracking-tight text-white">
             Waveform Web
           </span>

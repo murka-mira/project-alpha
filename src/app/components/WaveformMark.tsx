@@ -4,8 +4,7 @@ export default function WaveformMark({ className = "h-5 w-5" }: { className?: st
     <img
       src="/waveform-icon.png"
       alt="Waveform Web"
-      className={`${className} object-cover`}
-      style={{ objectPosition: "75% 40%" }}
+      className={`${className} rounded-full object-cover`}
     />
   );
 }
