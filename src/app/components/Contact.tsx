@@ -5,11 +5,29 @@ import { motion } from "framer-motion";
 import { Mail, MapPin, Send, CheckCircle2 } from "lucide-react";
 
 export default function Contact() {
-  const [status, setStatus] = useState<"idle" | "sent">("idle");
+  const [status, setStatus] = useState<"idle" | "sending" | "sent" | "error">(
+    "idle"
+  );
 
-  function handleSubmit(e: FormEvent<HTMLFormElement>) {
+  async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    setStatus("sent");
+    setStatus("sending");
+
+    const form = e.currentTarget;
+    const data = Object.fromEntries(new FormData(form).entries());
+
+    try {
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      });
+
+      if (!res.ok) throw new Error("Failed to send");
+      setStatus("sent");
+    } catch {
+      setStatus("error");
+    }
   }
 
   return (
@@ -30,13 +48,13 @@ export default function Contact() {
 
             <div className="mt-8 space-y-4">
               <a
-                href="mailto:hello@waveformweb.com"
+                href="mailto:ebeldylan@icloud.com"
                 className="flex items-center gap-3 text-sm text-ink-soft transition-colors hover:text-ocean"
               >
                 <span className="flex h-10 w-10 items-center justify-center rounded-full bg-white shadow-sm">
                   <Mail size={17} className="text-ocean" />
                 </span>
-                hello@waveformweb.com
+                ebeldylan@icloud.com
               </a>
               <div className="flex items-center gap-3 text-sm text-ink-soft">
                 <span className="flex h-10 w-10 items-center justify-center rounded-full bg-white shadow-sm">
@@ -140,14 +158,29 @@ export default function Contact() {
 
                   <button
                     type="submit"
-                    className="group inline-flex w-full items-center justify-center gap-2 rounded-full bg-navy px-6 py-3.5 text-sm font-semibold text-white shadow-lg shadow-ink/10 transition-all hover:-translate-y-0.5 hover:shadow-xl sm:w-auto"
+                    disabled={status === "sending"}
+                    className="group inline-flex w-full items-center justify-center gap-2 rounded-full bg-navy px-6 py-3.5 text-sm font-semibold text-white shadow-lg shadow-ink/10 transition-all hover:-translate-y-0.5 hover:shadow-xl disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:translate-y-0 sm:w-auto"
                   >
-                    Send Message
+                    {status === "sending" ? "Sending..." : "Send Message"}
                     <Send
                       size={15}
                       className="transition-transform group-hover:translate-x-1"
                     />
                   </button>
+
+                  {status === "error" && (
+                    <p className="text-sm text-red-600">
+                      Something went wrong sending your message. Please try
+                      again, or email{" "}
+                      <a
+                        href="mailto:ebeldylan@icloud.com"
+                        className="font-medium underline"
+                      >
+                        ebeldylan@icloud.com
+                      </a>{" "}
+                      directly.
+                    </p>
+                  )}
                 </form>
               )}
             </div>
