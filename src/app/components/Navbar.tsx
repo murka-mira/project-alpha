@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { Menu, X } from "lucide-react";
+import WaveformMark from "./WaveformMark";
 
 const links = [
   { href: "#top", label: "Home" },
@@ -31,16 +32,7 @@ export default function Navbar() {
       <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
         <a href="#top" className="flex items-center gap-2.5">
           <span className="flex h-8 w-8 items-center justify-center overflow-hidden rounded-full bg-navy-3 ring-1 ring-white/10">
-            <svg viewBox="0 0 24 24" className="h-5 w-5 text-aqua-2">
-              <path
-                d="M2 16c2-6 6-9 9-9 3.5 0 4.5 3.5 4 6.5-.3 2-2 3-3.5 2.3"
-                stroke="currentColor"
-                strokeWidth="2"
-                fill="none"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            </svg>
+            <WaveformMark className="h-6 w-6" />
           </span>
           <span className="text-[15px] font-semibold tracking-tight text-white">
             Waveform Web

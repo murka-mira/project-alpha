@@ -3,6 +3,7 @@
 import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import AnimatedWaves from "./AnimatedWaves";
+import WaveformLogo from "./WaveformLogo";
 
 export default function Hero() {
   return (
@@ -11,14 +12,14 @@ export default function Hero() {
       className="relative flex min-h-screen flex-col overflow-hidden bg-navy"
     >
       <div className="relative flex flex-1 flex-col items-center justify-center px-6 pt-28 text-center">
-        <motion.p
-          initial={{ opacity: 0, y: 10, rotate: -2 }}
-          animate={{ opacity: 1, y: 0, rotate: -2 }}
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
-          className="font-hand mb-2 inline-block text-3xl text-aqua sm:text-4xl"
+          className="mb-2"
         >
-          Waveform Web
-        </motion.p>
+          <WaveformLogo className="w-56 sm:w-64" />
+        </motion.div>
 
         <motion.h1
           initial={{ opacity: 0, y: 22 }}
