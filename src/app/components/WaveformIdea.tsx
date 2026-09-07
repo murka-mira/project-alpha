@@ -7,7 +7,7 @@ export default function WaveformIdea() {
   return (
     <section id="waveform" className="relative overflow-hidden bg-navy py-24 sm:py-32">
       <div className="relative mx-auto max-w-3xl px-6 text-center">
-        <p className="font-hand -rotate-1 text-2xl text-aqua-2">
+        <p className="font-hand text-2xl text-aqua-2">
           The Waveform Idea
         </p>
         <h2 className="mt-2 text-3xl font-semibold tracking-tight text-white sm:text-4xl">

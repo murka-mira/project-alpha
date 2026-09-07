@@ -62,7 +62,7 @@ export default function About() {
             transition={{ duration: 0.6 }}
             className="lg:col-span-2"
           >
-            <div className="relative mx-auto aspect-square w-full max-w-sm -rotate-2 overflow-hidden rounded-2xl bg-mist ring-4 ring-white shadow-lg">
+            <div className="relative mx-auto aspect-square w-full max-w-sm overflow-hidden rounded-2xl bg-mist ring-4 ring-white shadow-lg">
               <Image
                 src="/dylan-photo.png"
                 alt="Dylan, founder of Waveform Web"
@@ -88,12 +88,10 @@ export default function About() {
             </div>
 
             <div className="mx-auto mt-6 flex max-w-sm flex-wrap justify-center gap-2">
-              {statusLines.map((line, i) => (
+              {statusLines.map((line) => (
                 <span
                   key={line}
-                  className={`font-hand rounded-md bg-mist px-3 py-1 text-base text-ink-soft ${
-                    i % 2 === 0 ? "-rotate-1" : "rotate-1"
-                  }`}
+                  className="font-hand rounded-md bg-mist px-3 py-1 text-base text-ink-soft"
                 >
                   {line}
                 </span>
@@ -124,7 +122,7 @@ export default function About() {
               </p>
             </div>
 
-            <blockquote className="font-hand mt-8 -rotate-1 rounded-2xl border-2 border-dashed border-ocean/40 bg-mist px-5 py-4 text-2xl text-ink">
+            <blockquote className="font-hand mt-8 rounded-2xl border-2 border-dashed border-ocean/40 bg-mist px-5 py-4 text-2xl text-ink">
               &ldquo;I want to help small businesses that don&apos;t have
               websites get more business.&rdquo;
             </blockquote>

@@ -14,7 +14,6 @@ const projects = [
     accent: "#8fe9ef",
     Mockup: SalonMockup,
     url: "https://no6.ebellabs.com/p/hair-design-by-kevin",
-    rotate: "-rotate-1",
   },
   {
     name: "Share Your Boat",
@@ -24,7 +23,6 @@ const projects = [
     accent: "#1c86c9",
     Mockup: MarketplaceMockup,
     url: "https://shareyourboat.com",
-    rotate: "rotate-1",
   },
 ];
 
@@ -44,7 +42,7 @@ export default function Portfolio() {
       <div className="mx-auto max-w-7xl px-6">
         <div className="flex flex-wrap items-end justify-between gap-6">
           <div className="max-w-2xl">
-            <p className="font-hand -rotate-1 text-2xl text-ocean">
+            <p className="font-hand text-2xl text-ocean">
               Stuff I&apos;ve Built 🌊
             </p>
             <h2 className="mt-2 text-3xl font-semibold tracking-tight text-ink sm:text-4xl">
@@ -100,7 +98,7 @@ export default function Portfolio() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, amount: 0.3 }}
               transition={{ duration: 0.5, delay: i * 0.08 }}
-              className={`group block w-[300px] shrink-0 snap-start overflow-hidden rounded-2xl border border-line bg-white shadow-sm transition-transform duration-300 hover:-translate-y-1 hover:rotate-0 sm:w-[380px] ${project.rotate}`}
+              className="group block w-[300px] shrink-0 snap-start overflow-hidden rounded-2xl border border-line bg-white shadow-sm transition-transform duration-300 hover:-translate-y-1 sm:w-[380px]"
             >
               {/* Browser chrome */}
               <div className="flex items-center gap-1.5 border-b border-line px-4 py-3">

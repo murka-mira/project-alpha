@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import { Check } from "lucide-react";
+import Link from "next/link";
 
 // Edit prices/features here — nothing else in this file needs to change.
 const PACKAGES = [
@@ -157,6 +158,16 @@ export default function Pricing() {
             Get in touch
           </a>{" "}
           for a custom quote.
+        </p>
+        <p className="mx-auto mt-3 max-w-2xl text-center text-xs text-ink-soft">
+          Prices above do not include{" "}
+          <Link
+            href="/hosting-costs"
+            className="font-medium text-ocean hover:underline"
+          >
+            monthly hosting costs
+          </Link>
+          .
         </p>
       </div>
     </section>
