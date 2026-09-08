@@ -51,7 +51,7 @@ export default function Navbar() {
             href="#contact"
             className="rounded-full bg-white/10 px-4 py-2 text-[13.5px] font-medium text-white ring-1 ring-inset ring-white/15 transition-colors hover:bg-white hover:text-navy"
           >
-            Get Started
+            Start a Project
           </a>
         </nav>
 
@@ -81,7 +81,7 @@ export default function Navbar() {
             onClick={() => setOpen(false)}
             className="mt-2 rounded-full bg-white px-4 py-2.5 text-center text-sm font-semibold text-navy"
           >
-            Get Started
+            Start a Project
           </a>
         </div>
       )}

@@ -27,7 +27,7 @@ const testimonials = [
 
 export default function Testimonials() {
   return (
-    <section id="testimonials" className="relative overflow-hidden bg-mist py-16 sm:py-24">
+    <section id="testimonials" className="relative overflow-hidden bg-white py-16 sm:py-24">
       <CornerBubbles className="right-0 top-8 sm:top-12" />
       <div className="mx-auto max-w-7xl px-6">
         <div className="mx-auto max-w-2xl text-center">
@@ -47,7 +47,7 @@ export default function Testimonials() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, amount: 0.3 }}
               transition={{ duration: 0.5, delay: i * 0.1 }}
-              className="flex flex-col rounded-2xl border border-line bg-white p-7 shadow-sm transition-shadow duration-300 hover:shadow-lg"
+              className="flex flex-col rounded-2xl border border-line bg-mist p-7 shadow-sm transition-shadow duration-300 hover:shadow-lg"
             >
               <div className="flex gap-0.5 text-ocean">
                 {Array.from({ length: 5 }).map((_, idx) => (

@@ -45,23 +45,23 @@ export default function Hero() {
           initial={{ opacity: 0, y: 22 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.24 }}
-          className="mt-10 flex flex-col items-center gap-3"
+          className="mt-10 flex flex-col items-center gap-3 sm:flex-row"
         >
           <a
-            href="#work"
+            href="#contact"
             className="group inline-flex items-center gap-2 rounded-full bg-aqua px-7 py-3.5 text-sm font-semibold text-navy transition-transform duration-200 hover:-rotate-1 hover:scale-[1.03]"
           >
-            See What I&apos;ve Built
+            Start a Project
             <ArrowRight
               size={16}
               className="transition-transform duration-300 group-hover:translate-x-1"
             />
           </a>
           <a
-            href="#contact"
-            className="font-hand text-lg text-white/60 underline decoration-white/30 decoration-wavy underline-offset-4 transition-colors hover:text-white"
+            href="#work"
+            className="inline-flex items-center gap-2 rounded-full border border-white/25 px-7 py-3.5 text-sm font-semibold text-white transition-colors hover:border-white/50 hover:bg-white/5"
           >
-            or say hi →
+            See My Work
           </a>
         </motion.div>
       </div>

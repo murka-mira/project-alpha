@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { Globe, ShieldCheck, Wrench } from "lucide-react";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 
@@ -11,17 +12,17 @@ export const metadata: Metadata = {
 
 const included = [
   {
-    emoji: "🌐",
+    icon: Globe,
     title: "Website hosting",
     text: "keeps your website online",
   },
   {
-    emoji: "🔒",
+    icon: ShieldCheck,
     title: "Security & basic maintenance",
     text: "helps keep the site running properly",
   },
   {
-    emoji: "🛠️",
+    icon: Wrench,
     title: "Updates & support",
     text: "small changes and fixes when needed",
   },
@@ -37,7 +38,7 @@ export default function HostingCostsPage() {
             Pricing
           </p>
           <h1 className="mt-3 text-3xl font-semibold tracking-tight text-ink sm:text-4xl">
-            🌊 What is the monthly website cost?
+            What is the monthly website cost?
           </h1>
 
           <div className="mt-6 space-y-4 text-ink-soft">
@@ -61,7 +62,9 @@ export default function HostingCostsPage() {
                 key={item.title}
                 className="flex items-start gap-3 rounded-xl border border-line bg-mist p-4"
               >
-                <span className="text-xl leading-none">{item.emoji}</span>
+                <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-white text-ocean">
+                  <item.icon size={16} strokeWidth={1.75} />
+                </span>
                 <p className="text-sm text-ink-soft">
                   <span className="font-semibold text-ink">{item.title}</span>{" "}
                   — {item.text}

@@ -1,7 +1,14 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { LayoutTemplate, RefreshCw, Smartphone, Rocket } from "lucide-react";
+import {
+  LayoutTemplate,
+  RefreshCw,
+  Smartphone,
+  Rocket,
+  MessageSquare,
+  Hammer,
+} from "lucide-react";
 import { WaveDivider, CornerBubbles } from "./OceanDecor";
 
 const services = [
@@ -26,6 +33,12 @@ const services = [
     description:
       "Help businesses that currently don't have a website establish their online presence.",
   },
+];
+
+const steps = [
+  { icon: MessageSquare, number: "01", title: "We talk" },
+  { icon: Hammer, number: "02", title: "I build" },
+  { icon: Rocket, number: "03", title: "We launch" },
 ];
 
 export default function Services() {
@@ -67,6 +80,20 @@ export default function Services() {
                 {service.description}
               </p>
             </motion.div>
+          ))}
+        </div>
+
+        <div className="mt-16 flex flex-col items-center gap-6 border-t border-line pt-10 sm:flex-row sm:justify-center sm:gap-12">
+          {steps.map((step) => (
+            <div key={step.title} className="flex items-center gap-3">
+              <span className="relative flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-navy text-white">
+                <step.icon size={16} strokeWidth={1.75} />
+                <span className="absolute -right-1.5 -top-1.5 flex h-4 w-4 items-center justify-center rounded-full bg-white text-[9px] font-bold text-ocean ring-1 ring-line">
+                  {step.number}
+                </span>
+              </span>
+              <span className="text-sm font-medium text-ink">{step.title}</span>
+            </div>
           ))}
         </div>
       </div>

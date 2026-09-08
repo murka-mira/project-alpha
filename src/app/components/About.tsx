@@ -43,13 +43,6 @@ const doodles = [
   { icon: Laptop, label: "Web Design" },
 ];
 
-const statusLines = [
-  "🌊 currently making waves",
-  "🎣 probably thinking about fishing",
-  "🏄 surf > everything",
-  "💻 building websites",
-];
-
 export default function About() {
   return (
     <section id="about" className="relative bg-white py-16 sm:py-24">
@@ -84,17 +77,6 @@ export default function About() {
                     {doodle.label}
                   </span>
                 </div>
-              ))}
-            </div>
-
-            <div className="mx-auto mt-6 flex max-w-sm flex-wrap justify-center gap-2">
-              {statusLines.map((line) => (
-                <span
-                  key={line}
-                  className="font-hand rounded-md bg-mist px-3 py-1 text-base text-ink-soft"
-                >
-                  {line}
-                </span>
               ))}
             </div>
           </motion.div>

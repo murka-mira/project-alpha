@@ -4,7 +4,6 @@ import About from "./components/About";
 import WaveformIdea from "./components/WaveformIdea";
 import Services from "./components/Services";
 import Portfolio from "./components/Portfolio";
-import Process from "./components/Process";
 import Pricing from "./components/Pricing";
 import Testimonials from "./components/Testimonials";
 import CTA from "./components/CTA";
@@ -20,7 +19,6 @@ export default function Home() {
         <About />
         <Services />
         <Portfolio />
-        <Process />
         <Pricing />
         <Testimonials />
         <WaveformIdea />
