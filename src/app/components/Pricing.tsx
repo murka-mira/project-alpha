@@ -5,6 +5,7 @@ import { Check } from "lucide-react";
 import Link from "next/link";
 import { WaveDivider, CornerBubbles } from "./OceanDecor";
 import { SurfboardDoodle, WaterLines } from "./Doodles";
+import ParallaxDoodle from "./ParallaxDoodle";
 
 // Edit prices/features here — nothing else in this file needs to change.
 const PACKAGES = [
@@ -60,14 +61,12 @@ export default function Pricing() {
     <section id="pricing" className="relative overflow-hidden bg-mist py-16 sm:py-24">
       <WaveDivider className="absolute inset-x-0 top-0" flip />
       <CornerBubbles className="left-0 bottom-8 sm:bottom-12" />
-      <SurfboardDoodle
-        size={30}
-        className="animate-wobble absolute right-10 top-28 hidden text-ocean/30 lg:block"
-      />
-      <WaterLines
-        size={56}
-        className="absolute right-12 bottom-16 hidden text-aqua/40 lg:block"
-      />
+      <ParallaxDoodle className="absolute right-10 top-28 hidden lg:block" range={20}>
+        <SurfboardDoodle size={30} className="animate-wobble text-ocean/30" />
+      </ParallaxDoodle>
+      <ParallaxDoodle className="absolute right-12 bottom-16 hidden lg:block" range={16}>
+        <WaterLines size={56} className="text-aqua/40" />
+      </ParallaxDoodle>
       <div className="mx-auto max-w-7xl px-6">
         <div className="mx-auto max-w-2xl text-center">
           <p className="text-sm font-semibold uppercase tracking-widest text-ocean">

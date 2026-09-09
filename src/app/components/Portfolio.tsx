@@ -6,6 +6,7 @@ import Link from "next/link";
 import { SalonMockup, MarketplaceMockup } from "./PortfolioMockups";
 import { WaveDivider } from "./OceanDecor";
 import { FishDoodle, SparkleDoodle } from "./Doodles";
+import ParallaxDoodle from "./ParallaxDoodle";
 
 const projects = [
   {
@@ -32,14 +33,12 @@ export default function Portfolio() {
   return (
     <section id="work" className="relative overflow-hidden bg-white py-16 sm:py-24">
       <WaveDivider from="var(--mist)" to="#ffffff" flip />
-      <FishDoodle
-        size={26}
-        className="animate-wave-drift absolute right-10 top-28 hidden -scale-x-100 text-ocean/30 lg:block"
-      />
-      <SparkleDoodle
-        size={16}
-        className="animate-wobble absolute left-10 bottom-24 hidden text-aqua/50 lg:block"
-      />
+      <ParallaxDoodle className="absolute right-10 top-28 hidden lg:block" range={22}>
+        <FishDoodle size={26} className="animate-wave-drift -scale-x-100 text-ocean/30" />
+      </ParallaxDoodle>
+      <ParallaxDoodle className="absolute left-10 bottom-24 hidden lg:block" range={16}>
+        <SparkleDoodle size={16} className="animate-wobble text-aqua/50" />
+      </ParallaxDoodle>
       <div className="mx-auto max-w-6xl px-6">
         <div className="mx-auto max-w-2xl text-center">
           <p className="text-sm font-semibold uppercase tracking-widest text-ocean">

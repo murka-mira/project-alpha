@@ -6,6 +6,7 @@ import { Mail, MapPin, Send, CheckCircle2 } from "lucide-react";
 import Link from "next/link";
 import { WaveDivider } from "./OceanDecor";
 import { BubbleCluster, SparkleDoodle } from "./Doodles";
+import ParallaxDoodle from "./ParallaxDoodle";
 
 export default function Contact() {
   const [status, setStatus] = useState<"idle" | "sending" | "sent" | "error">(
@@ -36,14 +37,12 @@ export default function Contact() {
   return (
     <section id="contact" className="relative overflow-hidden bg-mist py-16 sm:py-24">
       <WaveDivider flip />
-      <SparkleDoodle
-        size={18}
-        className="animate-wobble absolute left-10 top-24 hidden text-ocean/40 lg:block"
-      />
-      <BubbleCluster
-        size={44}
-        className="animate-blob absolute right-10 top-40 hidden text-aqua/30 lg:block"
-      />
+      <ParallaxDoodle className="absolute left-10 top-24 hidden lg:block" range={16}>
+        <SparkleDoodle size={18} className="animate-wobble text-ocean/40" />
+      </ParallaxDoodle>
+      <ParallaxDoodle className="absolute right-10 top-40 hidden lg:block" range={20}>
+        <BubbleCluster size={44} className="animate-blob text-aqua/30" />
+      </ParallaxDoodle>
       <div className="mx-auto max-w-6xl px-6">
         <div className="grid gap-12 lg:grid-cols-5 lg:gap-16">
           <div className="lg:col-span-2">

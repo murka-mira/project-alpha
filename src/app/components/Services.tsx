@@ -11,6 +11,7 @@ import {
 } from "lucide-react";
 import { WaveDivider, CornerBubbles } from "./OceanDecor";
 import { BubbleCluster, WaterLines } from "./Doodles";
+import ParallaxDoodle from "./ParallaxDoodle";
 
 const services = [
   {
@@ -47,14 +48,12 @@ export default function Services() {
     <section id="services" className="relative overflow-hidden bg-mist py-16 sm:py-24">
       <WaveDivider className="absolute inset-x-0 top-0" />
       <CornerBubbles className="left-0 top-6 sm:top-10" />
-      <BubbleCluster
-        size={44}
-        className="animate-blob absolute right-8 top-20 hidden text-ocean/30 lg:block"
-      />
-      <WaterLines
-        size={56}
-        className="absolute bottom-16 left-8 hidden text-aqua/40 lg:block"
-      />
+      <ParallaxDoodle className="absolute right-8 top-20 hidden lg:block" range={20}>
+        <BubbleCluster size={44} className="animate-blob text-ocean/30" />
+      </ParallaxDoodle>
+      <ParallaxDoodle className="absolute bottom-16 left-8 hidden lg:block" range={18}>
+        <WaterLines size={56} className="text-aqua/40" />
+      </ParallaxDoodle>
       <div className="mx-auto max-w-7xl px-6">
         <div className="mx-auto max-w-2xl text-center">
           <p className="text-sm font-semibold uppercase tracking-widest text-ocean">

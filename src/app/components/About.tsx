@@ -4,6 +4,7 @@ import Image from "next/image";
 import { motion } from "framer-motion";
 import { Fish, Laptop } from "lucide-react";
 import { SurfboardDoodle, SparkleDoodle, FishDoodle } from "./Doodles";
+import ParallaxDoodle from "./ParallaxDoodle";
 
 const doodles = [
   { icon: SurfboardDoodle, label: "Surfing" },
@@ -14,14 +15,12 @@ const doodles = [
 export default function About() {
   return (
     <section id="about" className="relative overflow-hidden bg-white py-16 sm:py-24">
-      <FishDoodle
-        size={30}
-        className="animate-wave-drift-slow absolute left-6 top-24 hidden text-aqua/40 lg:block"
-      />
-      <SparkleDoodle
-        size={18}
-        className="animate-wobble absolute right-10 top-16 hidden text-ocean/40 lg:block"
-      />
+      <ParallaxDoodle className="absolute left-6 top-24 hidden lg:block" range={22}>
+        <FishDoodle size={30} className="animate-wave-drift-slow text-aqua/40" />
+      </ParallaxDoodle>
+      <ParallaxDoodle className="absolute right-10 top-16 hidden lg:block" range={16}>
+        <SparkleDoodle size={18} className="animate-wobble text-ocean/40" />
+      </ParallaxDoodle>
       <div className="mx-auto max-w-6xl px-6">
         <div className="grid gap-14 lg:grid-cols-5 lg:items-center lg:gap-16">
           <motion.div
