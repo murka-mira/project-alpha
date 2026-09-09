@@ -2,12 +2,10 @@
 
 import { motion } from "framer-motion";
 import AnimatedWaves from "./AnimatedWaves";
-import { WaveDivider } from "./OceanDecor";
 
 export default function WaveformIdea() {
   return (
     <section id="waveform" className="relative overflow-hidden bg-navy py-16 sm:py-24">
-      <WaveDivider className="absolute inset-x-0 top-0 opacity-70" />
       <div className="relative mx-auto max-w-3xl px-6 text-center">
         <p className="font-hand text-2xl text-aqua-2">
           The Waveform Idea

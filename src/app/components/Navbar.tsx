@@ -5,10 +5,9 @@ import { Menu, X } from "lucide-react";
 import WaveformMark from "./WaveformMark";
 
 const links = [
-  { href: "#top", label: "Home" },
-  { href: "#work", label: "Work" },
-  { href: "#services", label: "Services" },
   { href: "#about", label: "About" },
+  { href: "#work", label: "Portfolio" },
+  { href: "#pricing", label: "Services" },
   { href: "#contact", label: "Contact" },
 ];
 

@@ -3,6 +3,9 @@
 import { useState, type FormEvent } from "react";
 import { motion } from "framer-motion";
 import { Mail, MapPin, Send, CheckCircle2 } from "lucide-react";
+import Link from "next/link";
+import { WaveDivider } from "./OceanDecor";
+import { BubbleCluster, SparkleDoodle } from "./Doodles";
 
 export default function Contact() {
   const [status, setStatus] = useState<"idle" | "sending" | "sent" | "error">(
@@ -31,7 +34,16 @@ export default function Contact() {
   }
 
   return (
-    <section id="contact" className="relative bg-mist py-16 sm:py-24">
+    <section id="contact" className="relative overflow-hidden bg-mist py-16 sm:py-24">
+      <WaveDivider flip />
+      <SparkleDoodle
+        size={18}
+        className="animate-wobble absolute left-10 top-24 hidden text-ocean/40 lg:block"
+      />
+      <BubbleCluster
+        size={44}
+        className="animate-blob absolute right-10 top-40 hidden text-aqua/30 lg:block"
+      />
       <div className="mx-auto max-w-6xl px-6">
         <div className="grid gap-12 lg:grid-cols-5 lg:gap-16">
           <div className="lg:col-span-2">
@@ -117,7 +129,7 @@ export default function Contact() {
                         type="text"
                         required
                         className="w-full rounded-xl border border-line bg-mist/60 px-4 py-3 text-sm text-ink outline-none transition-colors focus:border-ocean focus:bg-white"
-                        placeholder="Jane Smith"
+                        placeholder="Your Name"
                       />
                     </div>
                     <div>
@@ -133,7 +145,7 @@ export default function Contact() {
                         type="email"
                         required
                         className="w-full rounded-xl border border-line bg-mist/60 px-4 py-3 text-sm text-ink outline-none transition-colors focus:border-ocean focus:bg-white"
-                        placeholder="jane@business.com"
+                        placeholder="yourname@something.com"
                       />
                     </div>
                   </div>
@@ -200,6 +212,22 @@ export default function Contact() {
               )}
             </div>
           </motion.div>
+        </div>
+
+        <div className="mx-auto mt-12 max-w-2xl">
+          <div className="flex items-center gap-3 text-xs font-medium uppercase tracking-widest text-ink-soft">
+            <span className="h-px flex-1 bg-line" />
+            Prefer to talk live?
+            <span className="h-px flex-1 bg-line" />
+          </div>
+          <div className="mt-6 text-center">
+            <Link
+              href="/schedule-a-call"
+              className="inline-flex items-center justify-center rounded-full bg-navy px-6 py-3.5 text-sm font-semibold text-white shadow-lg shadow-ink/10 transition-all hover:-translate-y-0.5 hover:shadow-xl"
+            >
+              Schedule a Call
+            </Link>
+          </div>
         </div>
       </div>
     </section>

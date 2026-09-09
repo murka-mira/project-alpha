@@ -1,3 +1,4 @@
+import Link from "next/link";
 import WaveformMark from "./WaveformMark";
 
 export default function Footer() {
@@ -13,6 +14,12 @@ export default function Footer() {
         <p className="text-xs text-white/40">
           &copy; {new Date().getFullYear()} Waveform Web. All rights reserved.
         </p>
+        <Link
+          href="/leave-a-review"
+          className="rounded-full bg-white/10 px-4 py-2 text-xs font-medium text-white ring-1 ring-inset ring-white/15 transition-colors hover:bg-white hover:text-navy"
+        >
+          Leave a Review
+        </Link>
       </div>
     </footer>
   );

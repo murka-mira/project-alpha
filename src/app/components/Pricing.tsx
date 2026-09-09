@@ -4,34 +4,36 @@ import { motion } from "framer-motion";
 import { Check } from "lucide-react";
 import Link from "next/link";
 import { WaveDivider, CornerBubbles } from "./OceanDecor";
+import { SurfboardDoodle, WaterLines } from "./Doodles";
 
 // Edit prices/features here — nothing else in this file needs to change.
 const PACKAGES = [
   {
     name: "Starter",
     price: 375,
-    billing: "one-time",
-    description: "A clean, professional one-page site to get you online fast.",
+    billing: "one-time setup",
+    description: "A clean, professional one-page site to get your business online.",
     features: [
       "1-page custom website",
-      "Mobile-responsive design",
+      "Mobile-friendly design",
       "Contact form",
-      "Basic on-page SEO",
-      "2-week turnaround",
+      "Google-ready SEO setup",
+      "Typical 2-week turnaround",
     ],
     highlighted: false,
   },
   {
     name: "Growth",
     price: 750,
-    billing: "one-time",
-    description: "The most popular choice for small businesses ready to grow.",
+    billing: "one-time setup",
+    description: "A complete website for small businesses ready to grow.",
     features: [
-      "Up to 5 pages",
-      "Custom design & copy support",
-      "Mobile-responsive design",
+      "Up to 5 custom pages",
+      "Custom design",
+      "Help with website text",
+      "Mobile-friendly design",
       "Contact form + Google Maps",
-      "SEO optimization",
+      "Google-ready SEO setup",
       "1 round of revisions",
     ],
     highlighted: true,
@@ -39,12 +41,12 @@ const PACKAGES = [
   {
     name: "Premium",
     price: 1250,
-    billing: "one-time",
-    description: "A full-featured site for businesses that need more.",
+    billing: "one-time setup",
+    description: "A larger, feature-rich website for businesses that need more.",
     features: [
       "Everything in Growth",
-      "Up to 10 pages",
-      "Booking or online ordering ready",
+      "Up to 10 custom pages",
+      "Booking or online ordering integration",
       "Advanced SEO setup",
       "2 rounds of revisions",
       "30 days of post-launch support",
@@ -58,6 +60,14 @@ export default function Pricing() {
     <section id="pricing" className="relative overflow-hidden bg-mist py-16 sm:py-24">
       <WaveDivider className="absolute inset-x-0 top-0" flip />
       <CornerBubbles className="left-0 bottom-8 sm:bottom-12" />
+      <SurfboardDoodle
+        size={30}
+        className="animate-wobble absolute right-10 top-28 hidden text-ocean/30 lg:block"
+      />
+      <WaterLines
+        size={56}
+        className="absolute right-12 bottom-16 hidden text-aqua/40 lg:block"
+      />
       <div className="mx-auto max-w-7xl px-6">
         <div className="mx-auto max-w-2xl text-center">
           <p className="text-sm font-semibold uppercase tracking-widest text-ocean">
@@ -155,22 +165,16 @@ export default function Pricing() {
           ))}
         </div>
 
-        <p className="mt-10 text-center text-xs text-ink-soft">
-          Have a bigger project in mind?{" "}
-          <a href="#contact" className="font-medium text-ocean hover:underline">
-            Get in touch
-          </a>{" "}
-          for a custom quote.
-        </p>
-        <p className="mx-auto mt-3 max-w-2xl text-center text-xs text-ink-soft">
-          Prices above do not include{" "}
+        <p className="mx-auto mt-8 max-w-2xl text-center text-xs text-ink-soft">
+          Prices above are one-time website setup fees, not recurring monthly
+          charges. Hosting &amp; maintenance are available for an additional{" "}
           <Link
             href="/hosting-costs"
             className="font-medium text-ocean hover:underline"
           >
-            monthly hosting costs
+            monthly fee
           </Link>
-          .
+          . We&apos;ll discuss your options before your site goes live.
         </p>
       </div>
     </section>

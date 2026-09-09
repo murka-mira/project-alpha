@@ -2,7 +2,7 @@
 
 import { motion } from "framer-motion";
 import { Star } from "lucide-react";
-import { CornerBubbles } from "./OceanDecor";
+import { CornerBubbles, WaveDivider } from "./OceanDecor";
 
 const testimonials = [
   {
@@ -28,6 +28,7 @@ const testimonials = [
 export default function Testimonials() {
   return (
     <section id="testimonials" className="relative overflow-hidden bg-white py-16 sm:py-24">
+      <WaveDivider from="var(--mist)" to="#ffffff" />
       <CornerBubbles className="right-0 top-8 sm:top-12" />
       <div className="mx-auto max-w-7xl px-6">
         <div className="mx-auto max-w-2xl text-center">

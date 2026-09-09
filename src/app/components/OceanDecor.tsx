@@ -1,22 +1,40 @@
+// The wave is the actual color boundary between the section above and the
+// section this divider sits inside of (`to`), not just a squiggle floating
+// on top of a hard-edged color cut. The region above the wave line is
+// painted `from` so it seamlessly matches the preceding section's flat
+// background; only below the wave does it become `to`.
 export function WaveDivider({
   flip = false,
-  className = "relative",
+  from = "#ffffff",
+  to = "var(--mist)",
+  className = "absolute inset-x-0 top-0",
 }: {
   flip?: boolean;
+  from?: string;
+  to?: string;
   className?: string;
 }) {
+  const wave = flip
+    ? "M0,56 Q120,86 240,56 T480,56 T720,56 T960,56 T1200,56 T1440,56"
+    : "M0,56 Q120,26 240,56 T480,56 T720,56 T960,56 T1200,56 T1440,56";
+  const waveDetail = flip
+    ? "M0,68 Q120,88 240,68 T480,68 T720,68 T960,68 T1200,68 T1440,68"
+    : "M0,68 Q120,48 240,68 T480,68 T720,68 T960,68 T1200,68 T1440,68";
+
   return (
     <div
       aria-hidden
-      className={`h-10 w-full overflow-hidden sm:h-14 ${className}`}
+      className={`pointer-events-none h-16 w-full overflow-hidden sm:h-24 ${className}`}
     >
       <svg
-        viewBox="0 0 1440 60"
+        viewBox="0 0 1440 128"
         preserveAspectRatio="none"
-        className={`h-full w-full ${flip ? "-scale-y-100" : ""}`}
+        className="h-full w-full"
       >
+        <path d={`${wave} L1440,0 L0,0 Z`} fill={from} />
+        <path d={`${wave} L1440,128 L0,128 Z`} fill={to} />
         <path
-          d="M0,32 Q120,12 240,32 T480,32 T720,32 T960,32 T1200,32 T1440,32"
+          d={wave}
           fill="none"
           stroke="#4bd8e6"
           strokeWidth="3"
@@ -24,7 +42,7 @@ export function WaveDivider({
           opacity="0.55"
         />
         <path
-          d="M0,42 Q120,26 240,42 T480,42 T720,42 T960,42 T1200,42 T1440,42"
+          d={waveDetail}
           fill="none"
           stroke="#1c86c9"
           strokeWidth="2"
@@ -32,9 +50,9 @@ export function WaveDivider({
           opacity="0.3"
         />
       </svg>
-      <span className="absolute left-[18%] top-1 h-1.5 w-1.5 rounded-full bg-aqua/40" />
-      <span className="absolute left-[52%] top-4 h-1 w-1 rounded-full bg-ocean/40" />
-      <span className="absolute left-[78%] top-0 h-2 w-2 rounded-full border border-aqua/40" />
+      <span className="absolute left-[18%] top-[30%] h-1.5 w-1.5 rounded-full bg-aqua/40" />
+      <span className="absolute left-[52%] top-[55%] h-1 w-1 rounded-full bg-ocean/40" />
+      <span className="absolute left-[78%] top-[22%] h-2 w-2 rounded-full border border-aqua/40" />
     </div>
   );
 }

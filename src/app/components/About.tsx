@@ -3,39 +3,7 @@
 import Image from "next/image";
 import { motion } from "framer-motion";
 import { Fish, Laptop } from "lucide-react";
-
-function SurfboardDoodle({
-  size = 24,
-  strokeWidth = 1.75,
-  className,
-}: {
-  size?: number;
-  strokeWidth?: number;
-  className?: string;
-}) {
-  return (
-    <svg
-      viewBox="0 0 24 24"
-      fill="none"
-      width={size}
-      height={size}
-      className={className}
-    >
-      <path
-        d="M12 2c3 4 5 10 5 14a5 5 0 0 1-10 0c0-4 2-10 5-14Z"
-        stroke="currentColor"
-        strokeWidth={strokeWidth}
-        strokeLinejoin="round"
-      />
-      <path
-        d="M12 6v13"
-        stroke="currentColor"
-        strokeWidth={Math.max(strokeWidth - 0.25, 1)}
-        strokeLinecap="round"
-      />
-    </svg>
-  );
-}
+import { SurfboardDoodle, SparkleDoodle, FishDoodle } from "./Doodles";
 
 const doodles = [
   { icon: SurfboardDoodle, label: "Surfing" },
@@ -45,7 +13,15 @@ const doodles = [
 
 export default function About() {
   return (
-    <section id="about" className="relative bg-white py-16 sm:py-24">
+    <section id="about" className="relative overflow-hidden bg-white py-16 sm:py-24">
+      <FishDoodle
+        size={30}
+        className="animate-wave-drift-slow absolute left-6 top-24 hidden text-aqua/40 lg:block"
+      />
+      <SparkleDoodle
+        size={18}
+        className="animate-wobble absolute right-10 top-16 hidden text-ocean/40 lg:block"
+      />
       <div className="mx-auto max-w-6xl px-6">
         <div className="grid gap-14 lg:grid-cols-5 lg:items-center lg:gap-16">
           <motion.div
@@ -105,8 +81,8 @@ export default function About() {
             </div>
 
             <blockquote className="font-hand mt-8 rounded-2xl border-2 border-dashed border-ocean/40 bg-mist px-5 py-4 text-2xl text-ink">
-              &ldquo;I want to help small businesses that don&apos;t have
-              websites get more business.&rdquo;
+              &ldquo;Every business has a story. We build the website that
+              helps it get heard.&rdquo;
             </blockquote>
           </motion.div>
         </div>

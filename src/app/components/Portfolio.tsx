@@ -2,7 +2,10 @@
 
 import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
+import Link from "next/link";
 import { SalonMockup, MarketplaceMockup } from "./PortfolioMockups";
+import { WaveDivider } from "./OceanDecor";
+import { FishDoodle, SparkleDoodle } from "./Doodles";
 
 const projects = [
   {
@@ -27,7 +30,16 @@ const projects = [
 
 export default function Portfolio() {
   return (
-    <section id="work" className="relative bg-white py-16 sm:py-24">
+    <section id="work" className="relative overflow-hidden bg-white py-16 sm:py-24">
+      <WaveDivider from="var(--mist)" to="#ffffff" flip />
+      <FishDoodle
+        size={26}
+        className="animate-wave-drift absolute right-10 top-28 hidden -scale-x-100 text-ocean/30 lg:block"
+      />
+      <SparkleDoodle
+        size={16}
+        className="animate-wobble absolute left-10 bottom-24 hidden text-aqua/50 lg:block"
+      />
       <div className="mx-auto max-w-6xl px-6">
         <div className="mx-auto max-w-2xl text-center">
           <p className="text-sm font-semibold uppercase tracking-widest text-ocean">
@@ -89,6 +101,16 @@ export default function Portfolio() {
               </div>
             </motion.div>
           ))}
+        </div>
+
+        <div className="mt-10 text-center">
+          <Link
+            href="/testimonials"
+            className="inline-flex items-center gap-2 rounded-full border border-line bg-white px-5 py-2.5 text-sm font-semibold text-ink transition-all hover:-translate-y-0.5 hover:shadow-lg hover:shadow-ink/[0.06]"
+          >
+            See What Clients Say
+            <ArrowRight size={14} />
+          </Link>
         </div>
       </div>
     </section>

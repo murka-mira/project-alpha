@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { ArrowRight } from "lucide-react";
+import { ArrowDown } from "lucide-react";
 import AnimatedWaves from "./AnimatedWaves";
 
 export default function CTA() {
@@ -27,13 +27,10 @@ export default function CTA() {
           </p>
           <a
             href="#contact"
-            className="group relative mt-8 inline-flex items-center gap-2.5 rounded-full bg-aqua px-8 py-3.5 text-sm font-semibold text-navy transition-all hover:-rotate-1 hover:scale-[1.03]"
+            aria-label="Start a project"
+            className="group relative mt-8 inline-flex items-center justify-center text-aqua transition-transform hover:translate-y-1"
           >
-            Start a Project
-            <ArrowRight
-              size={16}
-              className="transition-transform group-hover:translate-x-1"
-            />
+            <ArrowDown size={28} className="animate-bounce" strokeWidth={2.5} />
           </a>
         </motion.div>
       </div>

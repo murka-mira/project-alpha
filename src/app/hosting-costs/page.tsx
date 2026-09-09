@@ -3,6 +3,7 @@ import Link from "next/link";
 import { Globe, ShieldCheck, Wrench } from "lucide-react";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
+import { BubbleCluster, WaterLines } from "../components/Doodles";
 
 export const metadata: Metadata = {
   title: "Monthly Hosting Costs | Waveform Web",
@@ -32,7 +33,15 @@ export default function HostingCostsPage() {
   return (
     <>
       <Navbar />
-      <main className="bg-white pb-16 pt-28 sm:pb-20">
+      <main className="relative overflow-hidden bg-white pb-16 pt-28 sm:pb-20">
+        <BubbleCluster
+          size={40}
+          className="animate-blob absolute left-10 top-36 hidden text-aqua/30 xl:block"
+        />
+        <WaterLines
+          size={52}
+          className="absolute right-12 top-56 hidden text-ocean/40 xl:block"
+        />
         <div className="mx-auto max-w-2xl px-6">
           <p className="text-sm font-semibold uppercase tracking-widest text-ocean">
             Pricing
