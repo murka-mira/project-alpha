@@ -11,6 +11,15 @@ export default function Footer() {
             Waveform Web
           </span>
         </a>
+        <a
+          href="/arcade"
+          className="flex items-center gap-2 rounded-full bg-white/5 py-1 pl-1 pr-3 text-xs font-medium text-white/80 ring-1 ring-inset ring-white/15 transition-colors hover:bg-white/15 hover:text-white"
+          aria-label="Play the Waveform Arcade (CartNova)"
+        >
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src="/arcade/icons/icon-192.png" alt="" className="h-7 w-7 rounded-md" />
+          Arcade
+        </a>
         <p className="text-xs text-white/40">
           &copy; {new Date().getFullYear()} Waveform Web. All rights reserved.
         </p>

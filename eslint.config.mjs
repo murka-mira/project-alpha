@@ -12,6 +12,8 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // Built static site for the arcade page (not source code).
+    "public/arcade/**",
   ]),
 ]);
 
